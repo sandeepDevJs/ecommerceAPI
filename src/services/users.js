@@ -1,5 +1,6 @@
 const usersModel = require("../models/users.schema")
 const crud = require("./crud");
+const jwt = require("../api/utils/jwtUtility")
 
 module.exports.getUser = async (id=null) => {
     let data = (id === null) ? await crud.get(usersModel) : await crud.get(usersModel, id)
@@ -20,6 +21,9 @@ module.exports.getUser = async (id=null) => {
 
 }
 
+
+//user Sign Up
+
 module.exports.signUp = async (data) => {
 
     let insertedData = await crud.create(usersModel, data)
@@ -31,11 +35,25 @@ module.exports.signUp = async (data) => {
             data: insertedData
         }
     }
+
+    let isAdmin = (!insertedData.isAdmin) ? 0 : insertedData.isAdmin
+    let token =  await jwt.generateToken({ name : insertedData.name, email:insertedData.email, isAdmin:isAdmin })
+    console.error(token + "  : user service");
+
+    if (!token.status) {
+        return {
+            status:0,
+            message:token.error,
+            httpCode:401,
+            data: 0
+        }
+    }
+
     return {
         status:1,
         message:"Registered Successfully!",
         httpCode:200,
-        data: insertedData
+        data: token.token
     }
 
 }

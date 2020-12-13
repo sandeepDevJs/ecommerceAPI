@@ -2,10 +2,11 @@ const { Router } = require("express");
 const userService = require("../../services/users")
 const customResponse = require("../utils").customResponse
 const validators = require("../middlewares/validators")
+const auths = require("../middlewares/auth")
 const router = Router();
 
 //get all users
-router.get("/", async (req, res)=>{
+router.get("/", [auths.checkUser, auths.authAdmin], async (req, res)=>{
 
     let data = await userService.getUser()
     customResponse(res, data)
@@ -26,9 +27,9 @@ router.get("/:id", async (req, res) => {
 router.post("/register", validators.signUpValidations, async (req, res) => {
 
     let data = req.body
-    userService.signUp(data)
+    data = await userService.signUp(data)
     
-    customResponse(res, {httpCode:200, status:1, message:"Registered Successfully!!", data:null});
+    customResponse(res, data);
 })
 
 module.exports = router   
