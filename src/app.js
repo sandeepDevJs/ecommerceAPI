@@ -12,8 +12,13 @@ async function startServer() {
 }
 
 process.on("unhandledRejection", (error) => {
-    console.log("ERROR: "+error)
+    console.log("ERROR: "+error.red)
     process.exit(1)
+})
+
+process.on('uncaughtException', (error)  => {
+    console.log('Oh my god, something terrible happened: ',  error.red);
+    process.exit(1);
 })
 
 startServer();

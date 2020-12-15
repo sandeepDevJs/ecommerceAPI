@@ -7,6 +7,7 @@ var users = mongoose.Schema({
     },
     email: {
         type: String, 
+        unique:true,
         required: true
     },
     password: {
@@ -24,7 +25,8 @@ var users = mongoose.Schema({
         }   
     },
     isAdmin: {
-        type: Boolean
+        type: Boolean,
+        default: false
     },
     resetPasswordToken: {
         type: String

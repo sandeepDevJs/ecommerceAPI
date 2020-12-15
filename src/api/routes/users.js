@@ -24,10 +24,18 @@ router.get("/:id", async (req, res) => {
 })
 
 //User Sign up
-router.post("/register", validators.signUpValidations, async (req, res) => {
+router.post("/", validators.signUpValidations, async (req, res) => {
 
     let data = req.body
     data = await userService.signUp(data)
+    
+    customResponse(res, data);
+})
+
+// User Login
+router.post("/login", validators.signInValidations, async(req, res) => {
+    let data = req.body
+    data = await userService.login(data)
     
     customResponse(res, data);
 })

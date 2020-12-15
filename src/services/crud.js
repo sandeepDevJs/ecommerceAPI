@@ -1,13 +1,18 @@
-module.exports.get = async (Model, id=null) => {
+module.exports.get = async (Model, id=null, field=null) => {
  try{
 
     if(id === null){
         return await Model.find()
-    }else{
+
+    }else if(field === null){
         return await Model.find({_id:id})
+
+    }else{
+        return await Model.findOne(field)
     }
 
  }catch(err){
+    console.log(err)
     return false
  }
 }

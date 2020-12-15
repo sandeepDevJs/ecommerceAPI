@@ -1,13 +1,8 @@
 const verifyUser = require("../utils/jwtUtility").verifyToken
-const customResponse = require("../utils").customResponse
+const { customResponse, getReturnObj } = require("../utils")
 
 //response object for error
-let errorResponseObj = {
-    status:0,
-    message:"no data found",
-    httpCode:400,
-    data:null
-}
+let errorResponseObj = {}
 
 /**
  * 
@@ -18,15 +13,13 @@ let errorResponseObj = {
  * 
  */
 
-function verifyToken(Usertoken){
+function verifyToken(Usertoken=null){
 
     let tokenData = verifyUser(Usertoken)
 
     //if status is 0 that means an error occurred & set error response object
     if (!tokenData.status) {
-        errorResponseObj.status = tokenData.status
-        errorResponseObj.message = tokenData.error
-        errorResponseObj.httpCode = 403 
+        errorResponseObj = getReturnObj({message: tokenData.error, httpCode:403})
         return false
     }
 
@@ -41,6 +34,12 @@ function verifyToken(Usertoken){
  * 
  */
 module.exports.checkUser = (req, res, next) => {
+
+    if (!req.headers.authorization) {
+        errorResponseObj = getReturnObj({message: "We Need Token", httpCode:401})
+        customResponse(res, errorResponseObj)
+        return false
+    }
 
     let Usertoken = req.headers.authorization.split(" ")[1]
     let tokenData = verifyToken(Usertoken)
@@ -64,6 +63,12 @@ module.exports.checkUser = (req, res, next) => {
  */
 module.exports.authAdmin = (req, res, next) => {
 
+    if (!req.headers.authorization) {
+        errorResponseObj = getReturnObj({message: "We Need Token", httpCode:401})
+        customResponse(res, errorResponseObj)
+        return false
+    }
+
     let Usertoken = req.headers.authorization.split(" ")[1]
     let tokenData = verifyToken(Usertoken)
 
@@ -72,9 +77,7 @@ module.exports.authAdmin = (req, res, next) => {
 
         //if not admin
         if (!tokenData.isAdmin) {
-            errorResponseObj.status = 0
-            errorResponseObj.message = "You Are Not Authorized For Particular Request"
-            errorResponseObj.httpCode = 401 
+            errorResponseObj = getReturnObj({message: "You Are Not Authorized For Particular Request", httpCode:401})
             customResponse(res, errorResponseObj)
             return false
         }
@@ -85,7 +88,6 @@ module.exports.authAdmin = (req, res, next) => {
         return true
     }
 
-    
-    customResponse(res, errorResponseObj)
+    customResponse(res, getReturnObj({message: tokenData.error, httpCode:403}))
 
 }
