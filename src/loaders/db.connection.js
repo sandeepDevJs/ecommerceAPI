@@ -4,9 +4,9 @@ const config = require("../config")
 module.exports = async function() {
     try{
         await mongoose.connect(config.dbUrl, { useNewUrlParser:true, useUnifiedTopology:true, useCreateIndex: true })
-        console.log("===Connected To Db===")
+        console.log("<<<<<<<<<<<<=Connected To Db =>>>>>>>>>>>>>>".cyan.bold)
     }catch{
-        console.log("AN ERROR OCCURRED WHILE CONNECTING TO DB!!!!!!!!!")
+        console.log("AN ERROR OCCURRED WHILE CONNECTING TO DB!!!!!!!!!".red)
     }
 }
 // adminecom8291
