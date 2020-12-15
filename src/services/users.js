@@ -1,10 +1,21 @@
+/**
+ * 
+ * This File (users.js) is responsible for all user related services
+ * 
+ * **/
+
+
 const usersModel = require("../models/users.schema")
 const crud = require("./crud");
 const jwt = require("../api/utils/jwtUtility")
 const bcrypt = require("bcrypt")
-const getReturnObj = require("../api/utils").getReturnObj
+const getReturnObj = require("../api/utils").getReturnObj;
 
-
+/**
+ * @param  {String} email=null
+ * @desc   Takes email string, returns false if no email found
+ *         else returns users complete data
+ */
 async function isEmailExists(email=null) {
     if (email == undefined ) {
         return false
@@ -12,14 +23,20 @@ async function isEmailExists(email=null) {
     let isEmailExists = await crud.get(usersModel, 0 , {email:email})
     //email exists
     if (isEmailExists != undefined) {
-        return true
+        return isEmailExists
     }
     //else
     return false
 
 }
 
-//Get User By Id or All data
+
+/**
+ * 
+ * @param  {String} id=null
+ * @desc   if id is passed then it'll find by id else returns all user's data
+ * 
+ */
 module.exports.getUser = async (id=null) => {
     let data = (id === null) ? await crud.get(usersModel) : await crud.get(usersModel, id)
 
@@ -31,28 +48,27 @@ module.exports.getUser = async (id=null) => {
 
 }
 
-
-//user Sign Up
-module.exports.signUp = async (data) => {
+/**
+ * @param  {Object} data
+ * @desc   Registers New User (Proper Validated Data Need To Be Passed)
+ */
+module.exports.signUp = async (data={email : null}) => {
     try{
 
-        if ( await isEmailExists(data.email)) {
+        let email = await isEmailExists(data.email)
+        if ( email !== false ) {
             return getReturnObj({ message:"Provided Email Is Already Registered.", httpCode:400})
         }
-
         //updating user's password to encrypted password
         let salt = await bcrypt.genSalt(10)
         data.password = await bcrypt.hash(data.password, salt)
 
         let insertedData = await crud.create(usersModel, data)
-
         let token =  await jwt.generateToken({ name : insertedData.name, email:insertedData.email, isAdmin:insertedData.isAdmin })
-
         //if token generation fails
         if (!token.status) {
             return getReturnObj({ message:token.error, httpCode:401})
         }
-
         //return object of token, message, httpCode & status
         return getReturnObj({status:1, message:"Registered Successfully", data: token.token})
 
@@ -64,15 +80,18 @@ module.exports.signUp = async (data) => {
 
 }
 
-
-module.exports.login = async(credentials=undefined) => {
+/**
+ * @param  {Object} credentials
+ * @desc   Takes credentials and returns token if logged in successfully
+ *         else return error Object
+ */
+module.exports.login = async(credentials = {email : null}) => {
     try {
-        if (! await isEmailExists(credentials.email)) {
+        let data = await isEmailExists(credentials.email)
+        if (! data ) {
             return getReturnObj({ message:"Provided Email Is Not Registered.", httpCode:400})
         }
-
         let isMatched = bcrypt.compareSync(credentials.password, data.password);
-        
         if (isMatched) {
             
             let token = await jwt.generateToken({name: data.name, email:data.email, isAdmin:data.isAdmin})

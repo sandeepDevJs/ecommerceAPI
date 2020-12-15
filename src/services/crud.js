@@ -13,7 +13,7 @@ module.exports.get = async (Model, id=null, field=null) => {
 
  }catch(err){
     console.log(err)
-    return false
+    return null
  }
 }
 

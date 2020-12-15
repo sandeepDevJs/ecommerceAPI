@@ -2,11 +2,10 @@ const jwt = require("jsonwebtoken")
 const config = require("../../config")
 
 /**
- * 
- * Generate New Token with expiry of 1 hr
- * @params data => Data To Be Included.
- * 
- * **/
+ * @param  {Object} data
+ * @desc pass the data object need to be included in 
+ *       and returns the object containig token data and status
+ */
 module.exports.generateToken = async (data) => {
     try{
         let tokenData = await jwt.sign(data, config.privateKey, {expiresIn: "1h"})
@@ -15,13 +14,10 @@ module.exports.generateToken = async (data) => {
         return { status : 0, error:err}
     }
 }
-
 /**
- * 
- * Verify Token
- * @params userToken => Token To Be Verified.
- * 
- * **/
+ * @param  {String} userToken
+ * @desc  verifies the token & returns the result object containing decoded data Or error if occurres
+ */
 module.exports.verifyToken = (userToken) => {
     let data = jwt.verify(userToken, config.privateKey, (err, decoded) => {
         if (err) {

@@ -1,5 +1,12 @@
 
 /**
+ * 
+ * This file is carries utility functions.
+ * functions that are needed more often
+ * 
+ * */
+
+/**
  * @param  {Response} res
  * @param  {Object} data
  * 
@@ -16,7 +23,8 @@ module.exports.customResponse = (res, data) =>{
 }
 /**
  * @param  {Object} obj
- * @desc returns a object to the services for response objects
+ * @desc   return object of token, message, httpCode & status
+ *         to the services for response object
  */
 module.exports.getReturnObj = (obj) => {
 

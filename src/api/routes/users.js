@@ -14,7 +14,7 @@ router.get("/", [auths.checkUser, auths.authAdmin], async (req, res)=>{
 })
 
 //get user by id
-router.get("/:id", async (req, res) => {
+router.get("/:id", [auths.checkUser, auths.authAdmin], async (req, res) => {
 
     let id = req.params.id
     let data = await userService.getUser(id)

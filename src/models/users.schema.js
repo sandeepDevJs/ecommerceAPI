@@ -3,25 +3,25 @@ var mongoose = require('mongoose');
 var users = mongoose.Schema({
     name: {
         type: String, 
-        required: true
+        required: [true, "Name is required."]
     },
     email: {
         type: String, 
-        unique:true,
-        required: true
+        unique: [true, "Email must be unique"],
+        required: [true, "Email is required."]
     },
     password: {
         type: String, 
-        required: true
+        required: [true, "password is required"]
     },
     address: {
         street: {
             type: String, 
-            required: true
+            required: [true, "street is required"]
         },
         pincode: {
             type: Number, 
-            required: true
+            required: [true, "pincode is required"]
         }   
     },
     isAdmin: {
