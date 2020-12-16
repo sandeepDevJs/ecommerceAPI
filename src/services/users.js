@@ -64,13 +64,16 @@ module.exports.signUp = async (data={email : null}) => {
         data.password = await bcrypt.hash(data.password, salt)
 
         let insertedData = await crud.create(usersModel, data)
+        if (!inseterdData) {
+            return getReturnObj({ message:"An Error Occurred While Registering", httpCode:500})
+        }
         let token =  await jwt.generateToken({ name : insertedData.name, email:insertedData.email, isAdmin:insertedData.isAdmin })
         //if token generation fails
         if (!token.status) {
             return getReturnObj({ message:token.error, httpCode:401})
         }
         //return object of token, message, httpCode & status
-        return getReturnObj({status:1, message:"Registered Successfully", data: token.token})
+        return getReturnObj({status:1, message:"Registered Successfully", httpCode:201, data: token.token})
 
     }catch(err){
         console.log(err)
@@ -98,7 +101,7 @@ module.exports.login = async(credentials = {email : null}) => {
             if (!token.status) {
                 return getReturnObj({message: "An UnHandled Error Occurred While Generating Token", httpCode:500})
             }
-            return getReturnObj({status:1, message:"Logged In!, Get Your Token In Data Field", httpCode:200, data:token.token})
+            return getReturnObj({status:1, message:"Logged In!, Get Your Token In Data Field", data:token.token})
         }
 
         return getReturnObj({message:"Invalid Credentials", httpCode:401})
@@ -106,5 +109,23 @@ module.exports.login = async(credentials = {email : null}) => {
     } catch (error) {
         console.log(error)
         return getReturnObj({message: "An UnHandled Error Occurred While Logging In", httpCode:500})
+    }
+}
+
+module.exports.UserUpdate = async (id, data) => {
+    try {
+        let isIdExists = await crud.get(usersModel, id)
+        if (isIdExists == undefined) {
+            return getReturnObj({message:"No Data Found Associated To Provided ID.", httpCode: 404})
+        }
+        let updatedData = await crud.update(usersModel, {_id : id}, data)
+        if (!updatedData) {
+            return getReturnObj({ message: "An Unhandled Error Occurred!!", httpCode:500})    
+        }
+        return getReturnObj({status: 1, message: "Data Updated Successfully!!!", data:updatedData})
+
+    } catch (error) {
+        console.log(error)
+        return getReturnObj({message: "An UnHandled Error Occurred While Updating.", httpCode:500})
     }
 }

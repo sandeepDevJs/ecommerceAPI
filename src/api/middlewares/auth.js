@@ -63,31 +63,13 @@ module.exports.checkUser = (req, res, next) => {
  */
 module.exports.authAdmin = (req, res, next) => {
 
-    if (!req.headers.authorization) {
-        errorResponseObj = getReturnObj({message: "We Need Token", httpCode:401})
+    //if not admin
+    if (!req.userData.isAdmin) {
+        errorResponseObj = getReturnObj({message: "You Are Not Authorized For Particular Request", httpCode:401})
         customResponse(res, errorResponseObj)
         return false
     }
-
-    let Usertoken = req.headers.authorization.split(" ")[1]
-    let tokenData = verifyToken(Usertoken)
-
-    //if passes the verification
-    if (tokenData !== false) {
-
-        //if not admin
-        if (!tokenData.isAdmin) {
-            errorResponseObj = getReturnObj({message: "You Are Not Authorized For Particular Request", httpCode:401})
-            customResponse(res, errorResponseObj)
-            return false
-        }
-
-        //user is a admin and set userdata in request object
-        req.userData = tokenData
-        next()
-        return true
-    }
-
-    customResponse(res, getReturnObj({message: tokenData.error, httpCode:403}))
+    next()
+    return true
 
 }

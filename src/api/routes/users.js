@@ -1,7 +1,7 @@
 const { Router } = require("express");
 const userService = require("../../services/users")
 const customResponse = require("../utils").customResponse
-const validators = require("../middlewares/validators")
+const { validator, idValidator } = require("../middlewares/validators")
 const auths = require("../middlewares/auth")
 const router = Router();
 
@@ -14,7 +14,7 @@ router.get("/", [auths.checkUser, auths.authAdmin], async (req, res)=>{
 })
 
 //get user by id
-router.get("/:id", [auths.checkUser, auths.authAdmin], async (req, res) => {
+router.get("/:id", [auths.checkUser, auths.authAdmin, idValidator], async (req, res) => {
 
     let id = req.params.id
     let data = await userService.getUser(id)
@@ -24,7 +24,7 @@ router.get("/:id", [auths.checkUser, auths.authAdmin], async (req, res) => {
 })
 
 //User Sign up
-router.post("/", validators.signUpValidations, async (req, res) => {
+router.post("/", (req, res, next) => validator(req, res, next, "signUp"), async (req, res) => {
 
     let data = req.body
     data = await userService.signUp(data)
@@ -33,11 +33,27 @@ router.post("/", validators.signUpValidations, async (req, res) => {
 })
 
 // User Login
-router.post("/login", validators.signInValidations, async(req, res) => {
+router.post("/login", (req, res, next) => validator(req, res, next, "logIn"), async(req, res) => {
     let data = req.body
     data = await userService.login(data)
     
     customResponse(res, data);
 })
+
+//Update User Data
+router.put("/:id", [
+                    auths.checkUser, 
+                    auths.authAdmin,  
+                    idValidator, 
+                    (req, res, next) => validator(req, res, next, "update")
+                ], 
+                async (req, res) => {
+
+                    let requestedData = req.body
+                    let id = req.params.id
+                    let data = await userService.UserUpdate(id, requestedData)
+
+                    customResponse(res, data)
+                })
 
 module.exports = router   

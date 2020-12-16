@@ -12,7 +12,7 @@ async function startServer() {
 }
 
 process.on("unhandledRejection", (error) => {
-    console.log("ERROR: "+error.red)
+    console.log("ERROR: ", error)
     process.exit(1)
 })
 

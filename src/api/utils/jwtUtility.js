@@ -21,7 +21,7 @@ module.exports.generateToken = async (data) => {
 module.exports.verifyToken = (userToken) => {
     let data = jwt.verify(userToken, config.privateKey, (err, decoded) => {
         if (err) {
-            console.error("An Error Occurred While Generating Token")
+            console.error("An Error Occurred While Verifying Token")
             console.error(err.message);
             return { status: 0,  error: err.message }
         }
