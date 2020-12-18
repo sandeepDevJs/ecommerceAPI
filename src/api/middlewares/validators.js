@@ -1,4 +1,5 @@
 const Joi = require("joi")
+const mongoose = require("mongoose")
 const ErrorResponse = require("../../utils/errorResponse")
 let schemas = {
 
@@ -19,8 +20,18 @@ let schemas = {
 
     productCreate: Joi.object({
 
-                
-        
+                title: Joi.string().min(4).max(20).trim().required(),
+                description: Joi.string().min(10).max(50).trim().required(),
+                category: mongoose.Types.ObjectId,
+                subcategory: mongoose.Types.ObjectId,
+                manufacture_details: {
+                    model_number: Joi.string().alphanum().required(),
+                    release_date: Joi.date().required()
+                },
+                quantity: Joi.number().min(1).max(100).required(),
+                pricing: {
+                    price: Joi.number().min(200).max(10000).required()
+                }
             })
 }
 
@@ -49,4 +60,14 @@ module.exports.updateValidator = (req, res, next) => {
         return next(new ErrorResponse(isValidationPassed, 400)) 
     }
     next()
+}
+
+module.exports.createProductValidator = (req, res, next) => {
+
+    let isValidationPassed = validator("productCreate", req.body)
+    if (isValidationPassed !== true) {
+        return next(new ErrorResponse(isValidationPassed, 400)) 
+    }
+    next()
+
 }

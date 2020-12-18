@@ -1,16 +1,18 @@
+const { required } = require('joi');
 const mongoose = require('mongoose');
+const slugify = require("slugify")
 var products = new mongoose.Schema({
         title: {
             type: String, 
-            required: true
+            required: [true, "Title Is Required"]
         },
         description: {
             type: String, 
-            required: true
+            required: [true, "description is required"]
         },
         category: {
             type: String, 
-            required: true
+            required: [true, "category is required"]
         },
         subcategory: {
             type: String,
@@ -24,6 +26,10 @@ var products = new mongoose.Schema({
                 type: Date
             }
         },
+        slug:{
+            type:String,
+            unique:[true, "Product Already Exists"]
+        },
         quantity: {
             type: Number,
             required: true
@@ -35,6 +41,11 @@ var products = new mongoose.Schema({
             }
         }
     }); 
+
+    products.pre("save", function(next){
+        this.slug = slugify(this.title, {lower:true, strict:true})
+        next()
+    })
 
 
     module.exports = mongoose.model("products", products)
