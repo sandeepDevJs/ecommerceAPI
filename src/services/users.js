@@ -1,13 +1,38 @@
 const userModel = require("../models/users.schema")
-const asyncHandler = require("../api/middlewares/asyncHandler")
+const asyncHandler = require("../api/middlewares/asyncHandler");
+const { query } = require("express");
 
 module.exports.getUsers = asyncHandler(async (req, res) =>{
     let data;
-    if(req.query){
-        data = await userModel.find(req.query)
-    }else{
-        data = await userModel.find()
+    let query;
+    let reqQuery = { ...req.query }
+    
+    //fields we don't need while filtering
+    let removeFields = ["select", "sort", "limit", "page"]
+    removeFields.forEach( (param) => delete reqQuery[param] )
+
+    query = userModel.find(reqQuery)
+
+    //if any select opertaions
+    if (req.query.select) {
+        let fields = req.query.select.split(",").join(" ")
+        query.select(fields)
     }
+
+    //if any sort operation
+    if (req.query.sort) {
+        let sortBy = req.query.sort.split(",").join(" ")
+        query = query.sort(sortBy)
+    }
+
+    //pagination
+    let page = parseInt(req.query.page, 10) || 1
+    let limit = parseInt(req.query.limit, 10) || 2
+    let skip = (page - 1) * limit
+
+    query = query.skip(skip).limit(limit)
+
+    data = await query
     res.status(200).send({success:true, data:data})
 })
 

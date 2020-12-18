@@ -1,4 +1,3 @@
-const { required } = require('joi');
 const mongoose = require('mongoose');
 const slugify = require("slugify")
 var products = new mongoose.Schema({
