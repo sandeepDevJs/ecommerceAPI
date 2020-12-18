@@ -33,7 +33,7 @@
     "express": "^4.17.1",
     "helmet": "^4.2.0",
     "joi": "^17.3.0",
-    "mogoose": "0.0.1-security",
+    "mongoose": "^5.11.7",
     "morgan": "^1.10.0",
     "slugify": "^1.4.6"
   }
