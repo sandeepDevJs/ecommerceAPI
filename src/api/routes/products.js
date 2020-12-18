@@ -1,17 +1,27 @@
 const {Router} = require("express")
-const productsService = require("../../services/products")
+const { 
+    signUpValidator, 
+    updateValidator,
+} = require("../middlewares/validators")
 
-router = Router()
+const router = Router()
+const { 
+    getProductById,
+    getProducts,
+    updateProduct,
+    deleteProduct,
+    createProduct
+} = require("../../services/products")
 
-//get all products
-router.get("/", async (req, res) => {
-    let data = await productsService.getProducts()
-    res.status(data.httpCode)
-       .send({
-           status: data.status,
-           message:data.message, 
-           data: data.data
-        })
-})
+router
+    .route("/")
+    .get(getProducts)
+    .post([signUpValidator, createProduct])
+
+router
+    .route("/:id")
+    .get(getProductById)
+    .put([updateValidator, updateProduct])
+    .delete(deleteProduct)
 
 module.exports = router

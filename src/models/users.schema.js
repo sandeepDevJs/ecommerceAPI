@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 var mongoose = require('mongoose');
 
 var users = new mongoose.Schema({
@@ -8,7 +7,7 @@ var users = new mongoose.Schema({
         max:[14, "Name cannot be more than 14 characters in length"], 
         validate: {
             validator: function (v) {
-                let reg = /^([a-zA-Z]{2,}\s[a-zA-Z]{1,}'?-?[a-zA-Z]{2,}\s?([a-zA-Z]{1,})?)/
+                let reg = /^[a-zA-Z ]*$/;
                 return (v == null || v[0].trim().length < 1 || reg.test(v))
             },
             message : "Provided Name Is Invalid."
@@ -48,34 +47,6 @@ var users = new mongoose.Schema({
         required: [true, "address is required"]   
     },
 
-=======
-
-var mongoose = require('mongoose');
-var users = mongoose.Schema({
-    name: {
-        type: String, 
-        required: [true, "Name is required."]
-    },
-    email: {
-        type: String, 
-        unique: [true, "Email must be unique"],
-        required: [true, "Email is required."]
-    },
-    password: {
-        type: String, 
-        required: [true, "password is required"]
-    },
-    address: {
-        street: {
-            type: String, 
-            required: [true, "street is required"]
-        },
-        pincode: {
-            type: Number, 
-            required: [true, "pincode is required"]
-        }   
-    },
->>>>>>> 0cb780fb629563d9df9cb9cff2bf9716aa302643
     isAdmin: {
         type: Boolean,
         default: false
@@ -84,11 +55,8 @@ var users = mongoose.Schema({
         type: String
     },
     tokenExpiry: {
-<<<<<<< HEAD
         type: Date,
-=======
         type: Date
->>>>>>> 0cb780fb629563d9df9cb9cff2bf9716aa302643
     }
 }); 
 
