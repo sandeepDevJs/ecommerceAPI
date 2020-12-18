@@ -1,4 +1,5 @@
 {
+<<<<<<< HEAD
   "name": "ecommerce-api",
   "version": "1.0.0",
   "description": "real time ecommerce api",
@@ -27,12 +28,41 @@
   },
   "homepage": "https://github.com/sandeepDevJs/ecommerceAPI#readme",
   "dependencies": {
+=======
+  "name": "ecommerceapi",
+  "version": "1.0.0",
+  "description": "An E Commerce Real-time Api facilitate  All CRUD Operations. embedded  JWT Authentiction and Password encryption. Built using Expressjs.",
+  "main": "./src/app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "supervisor ./src/app.js"
+  },
+  "keywords": [
+    "Expressjs",
+    "Nodejs",
+    "Ecommerce",
+    "API"
+  ],
+  "author": "sandeepDevJs",
+  "license": "ISC",
+  "dependencies": {
+    "bcrypt": "^5.0.0",
+>>>>>>> 0cb780fb629563d9df9cb9cff2bf9716aa302643
     "colors": "^1.4.0",
     "dotenv": "^8.2.0",
     "express": "^4.17.1",
     "helmet": "^4.2.0",
     "joi": "^17.3.0",
+<<<<<<< HEAD
     "mogoose": "0.0.1-security",
     "morgan": "^1.10.0"
   }
+=======
+    "jsonwebtoken": "^8.5.1",
+    "mongoose": "^5.11.7",
+    "morgan": "^1.10.0",
+    "supervisor": "^0.12.0"
+  },
+  "devDependencies": {}
+>>>>>>> 0cb780fb629563d9df9cb9cff2bf9716aa302643
 }

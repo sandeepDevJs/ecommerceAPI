@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 const Joi = require("joi")
 const ErrorResponse = require("../../utils/errorResponse")
 let schemas = {
@@ -8,6 +9,20 @@ let schemas = {
                 password: Joi.string().max(12).min(5).trim().required(),
                 address: Joi.string().min(8).max(30).trim().required(),
                 isAdmin: Joi.boolean()
+=======
+const {customResponse, getReturnObj} = require("../utils")
+const Joi = require("joi")
+let schemas = {
+
+    signUp : Joi.object({
+                name: Joi.string().max(20).min(4).trim().required(),
+                email: Joi.string().email().max(50).min(8).trim().required(),
+                password: Joi.string().max(12).min(5).trim().required(),
+                address: {
+                    street : Joi.string().max(30).min(6).trim().required(),
+                    pincode: Joi.number().integer().min(6).required()
+                }
+>>>>>>> 0cb780fb629563d9df9cb9cff2bf9716aa302643
             }),
 
     logIn : Joi.object({
@@ -19,6 +34,7 @@ let schemas = {
                 name: Joi.string().max(20).min(4).trim(),
                 email: Joi.string().email().max(50).min(8).trim(),
                 password: Joi.string().max(12).min(5).trim(),
+<<<<<<< HEAD
                 address: Joi.string().max(30).min(6).trim()
             }),
     
@@ -65,6 +81,27 @@ module.exports.updateValidator = (req, res, next) => {
         return next(new ErrorResponse(isValidationPassed, 400)) 
     }
     next()  
+=======
+                address: {
+                    street : Joi.string().max(30).min(6).trim(),
+                    pincode: Joi.number().integer().min(6)
+                }
+            }),
+
+}
+
+
+module.exports.validator = (req, res, next, validationType) =>{
+
+    let schema = schemas[validationType]
+    let { error } = schema.validate(req.body)
+    if (error) {
+        customResponse(res, getReturnObj({message: error.message, httpCode:400}))
+        return false
+    }
+    next()
+    
+>>>>>>> 0cb780fb629563d9df9cb9cff2bf9716aa302643
 }
 
 module.exports.idValidator = (req, res, next) => {
@@ -74,11 +111,17 @@ module.exports.idValidator = (req, res, next) => {
     if (id.match(/^[0-9a-fA-F]{24}$/)) {
         return next()    
     } else {
+<<<<<<< HEAD
         return next(new ErrorResponse("Invalid Id", 400))  
+=======
+        customResponse(res, getReturnObj({message: "Invalid ID!!", httpCode:400}))
+        return false    
+>>>>>>> 0cb780fb629563d9df9cb9cff2bf9716aa302643
     }
 
 }
 
+<<<<<<< HEAD
 module.exports.queryValidator = (req, res, next) => {
     if (req.query) {
         let isValidationPassed = validator("query", req.query)
@@ -90,3 +133,5 @@ module.exports.queryValidator = (req, res, next) => {
     next()
 }
 
+=======
+>>>>>>> 0cb780fb629563d9df9cb9cff2bf9716aa302643
