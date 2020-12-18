@@ -27,12 +27,31 @@ module.exports.getProducts = asyncHandler(async (req, res) =>{
     //pagination
     let page = parseInt(req.query.page, 10) || 1
     let limit = parseInt(req.query.limit, 10) || 10
-    let skip = (page - 1) * limit
+    let startIndex = (page - 1) * limit
+    let endIndex = page*limit
+    let total = await ProductModel.countDocuments()
 
-    query = query.skip(skip).limit(limit)
+    //pagination result
+    let pagination = {}
+
+    if (endIndex < total) {
+        pagination.next = {
+            page: page+1,
+            limit
+        }
+    }
+
+    if (startIndex > 0) {
+        pagination.prev = {
+            page:page - 1,
+            limit
+        }
+    }
+
+    query = query.skip(startIndex).limit(limit)
 
     data = await query
-    res.status(200).send({success:true, data:data})
+    res.status(200).send({success:true, pagination, data:data})
 })
 
 module.exports.getProductById =  asyncHandler(async (req, res) =>{
