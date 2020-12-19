@@ -1,9 +1,11 @@
 const {Router} = require("express")
+const { celebrate } = require("celebrate")
+const router = Router()
+
 const { 
     createProductValidator
 } = require("../middlewares/validators")
 
-const router = Router()
 const { 
     getProductById,
     getProducts,
@@ -12,6 +14,7 @@ const {
     createProduct
 } = require("../../services/products")
 
+//Routes
 router
     .route("/")
     .get(getProducts)
