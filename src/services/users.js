@@ -51,7 +51,7 @@ module.exports.getUsers = asyncHandler(async (req, res) =>{
 
     query = query.skip(startIndex).limit(limit)
 
-    data = await query
+    data = await query.select("-__v")
     res.status(200).send({success:true, pagination, data:data})
 })
 
@@ -67,14 +67,14 @@ module.exports.getUserById =  asyncHandler(async (req, res) =>{
 module.exports.createUser = asyncHandler(async (req, res) =>{
 
     await new userModel(req.body).save()
-    res.send({message:"create users"})
+    res.status(201).send({message:"User Created!"})
 
 })
 
 module.exports.deleteUser = asyncHandler(async (req, res) =>{
     let data = await userModel.findByIdAndDelete(req.params.id)
     if (!data) {
-        return res.status(400).send({success:false})
+        return res.status(400).send({success:false, message:"No Data Associated To Provided ID!"})
     }
     return res.send({success:true, data:{}})
 })

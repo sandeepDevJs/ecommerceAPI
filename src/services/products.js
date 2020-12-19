@@ -10,7 +10,7 @@ module.exports.getProducts = asyncHandler(async (req, res) =>{
     let removeFields = ["select", "sort", "page", "limit"]
     removeFields.forEach( (param) => delete reqQuery[param] )
 
-    query = ProductModel.find(reqQuery)
+    query = ProductModel.find(reqQuery).populate({path: "category subcategory", select: "category subcategory -_id"})
     
     //if any select opertaions
     if (req.query.select) {
@@ -50,7 +50,7 @@ module.exports.getProducts = asyncHandler(async (req, res) =>{
 
     query = query.skip(startIndex).limit(limit)
 
-    data = await query
+    data = await query.select("-__v")
     res.status(200).send({success:true, pagination, data:data})
 })
 
@@ -66,7 +66,7 @@ module.exports.getProductById =  asyncHandler(async (req, res) =>{
 module.exports.createProduct = asyncHandler(async (req, res) =>{
 
     await new ProductModel(req.body).save()
-    res.send({message:"create users"})
+    res.status(201).send({message:"Product Created"})
 
 })
 

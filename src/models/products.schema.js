@@ -10,11 +10,13 @@ var products = new mongoose.Schema({
             required: [true, "description is required"]
         },
         category: {
-            type: String, 
+            type: mongoose.Types.ObjectId, 
+            ref:"categories",
             required: [true, "category is required"]
         },
         subcategory: {
-            type: String,
+            type: mongoose.Types.ObjectId, 
+            ref:"subcategories",
             required: true
         },
         manufacture_details: {

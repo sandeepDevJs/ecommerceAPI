@@ -39,3 +39,16 @@ module.exports.createProductValidator = {
         }
     })
 }
+
+module.exports.categoryValidator = {
+    body: Joi.object({
+        category: Joi.string().min(3).max(16).required(),
+    })
+}
+
+module.exports.subcategoryValidator = {
+    body: Joi.object({
+        subcategory: Joi.string().min(3).max(16).required(),
+        category_id: mongoose.Types.ObjectId
+    })
+}
