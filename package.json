@@ -27,6 +27,7 @@
   },
   "homepage": "https://github.com/sandeepDevJs/ecommerceAPI#readme",
   "dependencies": {
+    "celebrate": "^13.0.4",
     "colors": "^1.4.0",
     "cors": "^2.8.5",
     "dotenv": "^8.2.0",

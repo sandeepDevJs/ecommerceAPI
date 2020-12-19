@@ -1,4 +1,5 @@
 const ErrorResponse = require("../../utils/errorResponse")
+const { isCelebrateError } = require("celebrate")
 module.exports = (err, req, res, next) =>{
     
     let error = { ...err }
@@ -18,6 +19,11 @@ module.exports = (err, req, res, next) =>{
     if (err.name === "ValidationError") {
         let validationErrors = Object.values(err.errors).map(e => e.message)
         error = new ErrorResponse(validationErrors, 400)
+    }
+
+    //if celebrate error
+    if(isCelebrateError(err)){
+        error = new ErrorResponse(err.details.get("body").details[0].message, 400)
     }
 
     res.status(error.statusCode || 500).send({

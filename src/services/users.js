@@ -1,6 +1,6 @@
 const userModel = require("../models/users.schema")
 const asyncHandler = require("../api/middlewares/asyncHandler");
-const { query } = require("express");
+
 
 module.exports.getUsers = asyncHandler(async (req, res) =>{
     let data;

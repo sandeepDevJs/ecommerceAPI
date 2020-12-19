@@ -1,4 +1,5 @@
 const {Router} = require("express")
+const {celebrate }  = require("celebrate")
 const { 
     signUpValidator, 
     updateValidator,
@@ -17,7 +18,7 @@ const {
 router
     .route("/")
     .get(getUsers)
-    .post([signUpValidator, createUser])
+    .post(celebrate(signUpValidator),createUser)
 
 router
     .route("/login")
@@ -27,7 +28,7 @@ router
 router
     .route("/:id")
     .get(getUserById)
-    .put([updateValidator, updateUser])
+    .put(celebrate(updateValidator), updateUser)
     .delete(deleteUser)
 
 module.exports = router
