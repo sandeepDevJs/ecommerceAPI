@@ -49,4 +49,13 @@ var products = new mongoose.Schema({
     })
 
 
+    products.pre("updateOne", async function(next){
+        let dataToBeUpdated = this.getUpdate()
+        if (dataToBeUpdated.title) {
+            dataToBeUpdated.slug = slugify(dataToBeUpdated.title, {lower:true, strict:true})
+            this.update({}, dataToBeUpdated).exec()
+        }
+        next()
+    })
+
     module.exports = mongoose.model("products", products)

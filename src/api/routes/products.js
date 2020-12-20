@@ -3,11 +3,12 @@ const { celebrate } = require("celebrate")
 const router = Router()
 
 const { 
-    createProductValidator
+    createProductValidator, 
+    updateValidator,
+    updateProductValidator
 } = require("../middlewares/validators")
 
 const { 
-    getProductById,
     getProducts,
     updateProduct,
     deleteProduct,
@@ -22,8 +23,7 @@ router
 
 router
     .route("/:id")
-    .get(getProductById)
-    .put(updateProduct)
+    .put(celebrate(updateProductValidator), updateProduct)
     .delete(deleteProduct)
 
 module.exports = router

@@ -19,7 +19,7 @@ categories.pre("remove", async function (next) {
 
 
 categories.pre("save", async function(next){
-    let allData = await cats.find({})
+    let allData = await this.model("categories").find({})
     allData.forEach(data => {
         if (data.category.toLowerCase() === this.category.toLowerCase()) {
             next(new ErrorResponse("Resourse Already Exist!", 400))   

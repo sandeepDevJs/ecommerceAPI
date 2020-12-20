@@ -9,6 +9,6 @@ module.exports = (express, app) => {
     dbLoader()
     middlwares(express, app)
     routes(app)
-    app.use(errorHandler)
     app.use(notFoudHandler)
+    app.use(errorHandler)
 }
