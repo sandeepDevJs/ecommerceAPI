@@ -2,7 +2,11 @@ const {Router} = require("express")
 const { celebrate } = require("celebrate")
 const { categoryValidator } = require("../middlewares/validators")
 
-const { getCategories, createCategory, deleteCategory } = require("../../services/categories")
+const { getCategories, 
+        createCategory, 
+        deleteCategory,
+        getCategoryById,
+        updateCategory } = require("../../services/categories")
 
 const router = Router()
 
@@ -14,6 +18,8 @@ router
 
 router
     .route("/:id")
+    .get(getCategoryById)
+    .put(celebrate(categoryValidator), updateCategory)
     .delete(deleteCategory)
 
 module.exports = router
