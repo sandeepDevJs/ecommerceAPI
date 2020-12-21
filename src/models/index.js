@@ -15,7 +15,7 @@ function getModel(modelName) {
         case "subcategories":
             return SubcategoriesModel
 
-        case "uers":
+        case "users":
             return usersModel
         default:
             return false
