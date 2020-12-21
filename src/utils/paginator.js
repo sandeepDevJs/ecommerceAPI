@@ -1,4 +1,8 @@
+const { getModel } = require("../models")
+
 module.exports = async (Model, reqQuery, path=null, select="-__v -_id") => {
+
+    Model = getModel(Model)
 
     let filters = { ...reqQuery }
     let query;
@@ -17,10 +21,10 @@ module.exports = async (Model, reqQuery, path=null, select="-__v -_id") => {
 
     //pagination
     let page = parseInt(reqQuery.page, 10) || 1
-    let limit = parseInt(reqQuery.limit, 10) || 2
+    let limit = parseInt(reqQuery.limit, 10) || 3
     let startIndex = (page - 1) * limit
     let endIndex = page * limit
-    let total = Model.countDocuments() 
+    let total = await Model.countDocuments() 
 
     if ( endIndex < total ) {
         
@@ -28,7 +32,6 @@ module.exports = async (Model, reqQuery, path=null, select="-__v -_id") => {
             page: page+1,
             limit
         }
-
     }
 
     if (startIndex > 0) {

@@ -53,7 +53,7 @@ var products = new mongoose.Schema({
         let dataToBeUpdated = this.getUpdate()
         if (dataToBeUpdated.title) {
             dataToBeUpdated.slug = slugify(dataToBeUpdated.title, {lower:true, strict:true})
-            this.update({}, dataToBeUpdated).exec()
+            this.updateOne({}, dataToBeUpdated).exec()
         }
         next()
     })

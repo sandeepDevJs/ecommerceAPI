@@ -2,12 +2,10 @@ const ProductModel = require("../models/products.schema")
 const asyncHandler = require("../api/middlewares/asyncHandler")
 const crudOPs = require("../models")
 const paginator = require("../utils/paginator")
-// const { Task } = require("fawn")
-// const task = Task()
 
 module.exports.getProducts = asyncHandler(async (req, res) =>{
 
-    let { pagination, data } = await paginator(ProductModel, req.query, "category subcategory", "category subcategory -_id")
+    let { pagination, data } = await paginator("products", req.query, "category subcategory", "category subcategory -_id")
     res.status(200).send({success:true, pagination, data})    
 
 })
@@ -49,11 +47,15 @@ module.exports.updateProduct = asyncHandler(async (req, res) =>{
         await crudOPs.getData("subcategories", requestedData.subcategory)        
     }
 
-    if (requestedData.title) {
-        // task.update("")      
-    }
-
     data = await crudOPs.updateData("products", product_id, requestedData);
-    return res.send({success:true, data:data})
+    return res.send({success:true, data_modified:data})
+})
+
+module.exports.getProductById = asyncHandler( async (req, res) =>{
+
+    let data, product_id = req.params.id
+    data = await crudOPs.getData("products", product_id)
+    res.status(200).send({success:true, data})
+
 })
 

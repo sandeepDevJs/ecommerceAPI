@@ -88,5 +88,7 @@ module.exports.updateData = async (ModelName, id, anyData) => {
     data = await this.getData(ModelName, id)
 
     data = await Model.updateOne({_id:id}, anyData)
-    return data
+    return data.nModified
 }
+
+module.exports.getModel = getModel
