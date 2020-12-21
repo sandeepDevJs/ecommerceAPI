@@ -49,6 +49,14 @@ module.exports.categoryValidator = {
 module.exports.subcategoryValidator = {
     body: Joi.object({
         subcategory: Joi.string().min(3).max(16).required(),
+        category_id: mongoose.Types.ObjectId,
+        category_id: Joi.required()
+    })
+}
+
+module.exports.updateSubcategoryValidator = {
+    body: Joi.object({
+        subcategory: Joi.string().min(3).max(16),
         category_id: mongoose.Types.ObjectId
     })
 }

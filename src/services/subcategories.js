@@ -1,6 +1,7 @@
 const asyncHandler = require("../api/middlewares/asyncHandler")
 const SubcategoriesModel = require("../models/subcategory.schema")
 const CategoriesModel = require("../models/category.schema")
+const crudOPs = require("../models")
 const paginator = require("../utils/paginator")
 
 module.exports.getSubcategories = asyncHandler(async (req, res, next) => {
@@ -11,15 +12,34 @@ module.exports.getSubcategories = asyncHandler(async (req, res, next) => {
 
 module.exports.createSubcategory = asyncHandler( async (req, res) => {
 
-    let category_id = req.body.category_id
-    if (! await CategoriesModel.findById(category_id)) {
-        res.status(400).send({success:false, message:"We Need Proper Category_id."});
-        return false;    
+    let category_id = req.body.category_id, reqData = { ...req.body}, data;
+    if(!category_id) return res.status(400).send({success:false, message:"No Category Id Provided."})
+
+    data = crudOPs.createData("subcategories", reqData)
+    res.status(201).send({success:true, data})    
+
+})
+
+module.exports.deleteSubCategory = asyncHandler( async (req, res) => {
+    let id = req.params.id
+    let data = await crudOPs.deleteData("subcategories", id)
+    return res.send({success:true, data})
+} )
+
+module.exports.getSubCategoryById = asyncHandler( async (req, res) => {
+
+    let id = req.params.id, data;
+    data = await crudOPs.getData("subcategories", id)
+    return res.send({success:true, data})
+})
+
+module.exports.updateSubCategory = asyncHandler( async (req, res) => {
+
+    let id = req.params.id, reqData = { ...req.body }, data;
+    if (reqData.category_id) {
+        await crudOPs.getData("categories",reqData.category_id)
     }
-    let dataToBeSaved = { ...req.body }
-    console.log(dataToBeSaved)
-
-    let data = await new SubcategoriesModel(dataToBeSaved).save()
-    res.status(201).send({success:true, data:data})    
-
+    
+    data = await crudOPs.updateData("subcategories", id, reqData)
+    return res.send({success: true, data_modified:data})
 })

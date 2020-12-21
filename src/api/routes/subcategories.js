@@ -1,9 +1,14 @@
 const {Router} = require("express")
 const { celebrate } = require("celebrate")
 
-const { subcategoryValidator } = require("../middlewares/validators")
+const { subcategoryValidator,
+        updateSubcategoryValidator } = require("../middlewares/validators")
 
-const { getSubcategories, createSubcategory } = require("../../services/subcategories")
+const { getSubcategories, 
+        createSubcategory,
+        deleteSubCategory,
+        updateSubCategory,
+        getSubCategoryById } = require("../../services/subcategories")
 
 const router = Router()
 
@@ -13,5 +18,10 @@ router
     .get(getSubcategories)
     .post(celebrate(subcategoryValidator), createSubcategory)
 
+router
+    .route("/:id")
+    .get(getSubCategoryById)
+    .put(celebrate(updateSubcategoryValidator), updateSubCategory)
+    .delete(deleteSubCategory)
 
 module.exports = router
