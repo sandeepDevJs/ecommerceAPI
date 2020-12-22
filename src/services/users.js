@@ -1,6 +1,8 @@
 const asyncHandler = require("../api/middlewares/asyncHandler");
-const crudOPs = require("../models")
+const crudOPs = require("../models");
+const ErrorResponse = require("../utils/errorResponse");
 const paginator = require("../utils/paginator")
+const { verify } = require("../utils/encrypter")
 
 module.exports.getUsers = asyncHandler(async (req, res) =>{
 
@@ -36,6 +38,17 @@ module.exports.updateUser = asyncHandler(async (req, res) =>{
 
 module.exports.loginUser = asyncHandler(async(req, res) =>{
 
-    res.end();
+    let { email , password }  = req.body
+
+    let userData = await crudOPs.getData("users", 0, { email:email })
+
+    console.log(userData)
+
+    let result = await verify(password, userData[0].password)        
+    if (result) {
+        res.send({success:true, message:"You're logged In"})
+    }else{
+        res.status(401).send({success:false, message:"Invalid Credentials!!"})
+    }
 
 })

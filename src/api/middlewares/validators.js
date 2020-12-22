@@ -11,6 +11,13 @@ module.exports.signUpValidator = {
         })
 },
 
+module.exports.loginValidator = {
+    body : Joi.object({
+        email: Joi.string().email().max(50).min(8).trim().required(),
+        password: Joi.string().max(12).min(5).trim().required()
+    })
+}
+
 module.exports.updateValidator = {
 
     body : Joi.object({

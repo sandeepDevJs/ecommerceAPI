@@ -3,6 +3,7 @@ const {celebrate }  = require("celebrate")
 const { 
     signUpValidator, 
     updateValidator,
+    loginValidator
 } = require("../middlewares/validators")
 
 const router = Router()
@@ -22,7 +23,7 @@ router
 
 router
     .route("/login")
-    .post(loginUser)
+    .post(celebrate(loginValidator) ,loginUser)
 
 
 router

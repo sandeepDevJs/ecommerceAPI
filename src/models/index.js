@@ -41,7 +41,10 @@ module.exports.getData = async (Model, id, filters={}) =>{
     data = await query.select("-__v")
     //if no data found then throw an error
     if (!data) {
-        throw new ErrorResponse(`No Data Found ${ (id) ? "Associated To "+id : "!"}`, 400)
+        throw new ErrorResponse(`No Data Found Associated To ${id}`, 400)
+    }else if (!data.length) {
+        let filterFields = Object.keys(filters)
+        throw new ErrorResponse(`No Data Found Associated To ${filterFields} !`, 400)
     }
     return data
 }
