@@ -10,22 +10,20 @@ var products = new mongoose.Schema({
             required: [true, "description is required"]
         },
         category: {
-            type: mongoose.Types.ObjectId, 
-            ref:"categories",
+            type: String,
             required: [true, "category is required"]
         },
         subcategory: {
-            type: mongoose.Types.ObjectId, 
-            ref:"subcategories",
+            type: String,
             required: true
         },
-        manufacture_details: {
-            model_number: {
-                type: String
-            },
-            release_date: {
-                type: Date
-            }
+        model_number: {
+            type: String,
+            required: true
+        },
+        release_date: {
+            type: Date,
+            required: true
         },
         slug:{
             type:String,
@@ -43,8 +41,12 @@ var products = new mongoose.Schema({
         }
     }); 
 
-    products.pre("save", function(next){
+    products.pre("save", async function(next){
         this.slug = slugify(this.title, {lower:true, strict:true})
+        let category = await this.model("categories").findById(this.category)
+        let subcategory = await this.model("subcategories").findById(this.subcategory)
+        this.category = category.category
+        this.subcategory = subcategory.subcategory
         next()
     })
 

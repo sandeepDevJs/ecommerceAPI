@@ -1,11 +1,10 @@
-const ProductModel = require("../models/products.schema")
 const asyncHandler = require("../api/middlewares/asyncHandler")
 const crudOPs = require("../models")
 const paginator = require("../utils/paginator")
 
 module.exports.getProducts = asyncHandler(async (req, res) =>{
 
-    let { pagination, data } = await paginator("products", req.query, "category subcategory", "category subcategory -_id")
+    let { pagination, data } = await paginator("products", req.query)
     res.status(200).send({success:true, pagination, data})    
 
 })

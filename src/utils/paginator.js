@@ -55,6 +55,6 @@ module.exports = async (Model, reqQuery, path=null, select="-__v -_id") => {
         query = query.sort(sortBy)
     }
 
-    data = await query
+    data = await query.select("-__v")
     return { pagination, data }
 }

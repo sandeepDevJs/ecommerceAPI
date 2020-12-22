@@ -29,10 +29,8 @@ module.exports.createProductValidator = {
         description: Joi.string().min(10).max(50).trim().required(),
         category: mongoose.Types.ObjectId,
         subcategory: mongoose.Types.ObjectId,
-        manufacture_details: {
-            model_number: Joi.string().alphanum().required(),
-            release_date: Joi.date().required()
-        },
+        model_number: Joi.string().alphanum().required(),
+        release_date: Joi.date().required(),
         quantity: Joi.number().min(1).max(100).required(),
         pricing: {
             price: Joi.number().min(200).max(10000).required()
@@ -68,10 +66,8 @@ module.exports.updateProductValidator = {
         description: Joi.string().min(10).max(50).trim(),
         category: mongoose.Types.ObjectId,
         subcategory: mongoose.Types.ObjectId,
-        manufacture_details: {
-            model_number: Joi.string().alphanum(),
-            release_date: Joi.date()
-        },
+        model_number: Joi.string().alphanum(),
+        release_date: Joi.date(),
         quantity: Joi.number().min(0).max(1000),
         pricing: {
             price: Joi.number().min(200).max(10000)

@@ -1,15 +1,19 @@
 const ErrorResponse = require('../utils/errorResponse');
 var mongoose = require('mongoose');
-var categories = new mongoose.Schema({
-    category: {
-        type: String, 
-        required: true,
-        unique: [true, "category name already exists"]
+var categories = new mongoose.Schema(
+    {
+        category: {
+            type: String, 
+            required: true,
+            unique: [true, "category name already exists"]
+        }
+    },
+    {
+        toJSON:{virtuals:true},
+        toObject:{virtuals:true},
+        id:false
     }
-}, {
-    toJSON:{virtuals:true},
-    toObject:{virtuals:true}
-}); 
+); 
 
 categories.pre("remove", async function (next) {
     await this.model("subcategories").deleteMany({ category_id : this._id })

@@ -4,7 +4,7 @@ const paginator = require("../utils/paginator")
 
 module.exports.getCategories = asyncHandler(async (req, res, next) => {
  
-    let { pagination, data } = await paginator("categories", req.query, "subcategories")
+    let { pagination, data } = await paginator("categories", req.query, "subcategories", "-_id -__v")
     res.status(200).send({success:true, pagination, data})    
 })
 
