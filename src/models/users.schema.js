@@ -1,4 +1,5 @@
 var mongoose = require('mongoose');
+var { encrypt } = require("../utils/encrypter")
 
 var users = new mongoose.Schema({
     name: {
@@ -30,7 +31,7 @@ var users = new mongoose.Schema({
     password: {
         type: String, 
         min: [5, "password should be atleast 5 characters long"],
-        max:[10, "password cannot be more than 10 characters in length"],
+        max:[100, "password cannot be more than 10 characters in length"],
         required: [true, "password is required"]
     },
     address: {
@@ -59,5 +60,10 @@ var users = new mongoose.Schema({
         type: Date
     }
 }); 
+
+users.pre("save", async function (next) {
+    this.password = await encrypt(this.password)    
+    next()
+})
 
 module.exports = mongoose.model("users", users)

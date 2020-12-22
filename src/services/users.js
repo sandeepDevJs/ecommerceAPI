@@ -18,7 +18,7 @@ module.exports.createUser = asyncHandler(async (req, res) =>{
 
     let reqData = { ...req.body }, data
     data = await crudOPs.createData("users", reqData)
-    res.status(201).send({status:1, message:"User Created!", data})
+    res.status(201).send({success:1, message:"User Created!", data})
 
 })
 
