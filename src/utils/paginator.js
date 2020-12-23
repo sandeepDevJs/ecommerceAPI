@@ -1,4 +1,5 @@
-const { getModel } = require("../models")
+const { getModel } = require("../models");
+const ErrorResponse = require("./errorResponse");
 
 module.exports = async (Model, reqQuery, path=null, select="-__v -_id") => {
 
@@ -11,7 +12,12 @@ module.exports = async (Model, reqQuery, path=null, select="-__v -_id") => {
     let removeFields = ["select", "sort", "page", "limit"]
     removeFields.forEach( (param) => delete filters[param] )
 
-    query = Model.find(filters)
+    let queryStr = JSON.stringify(filters)
+    queryStr = queryStr.replace(/\b(gt|gte|lt|lte|in)\b/g, match => `$${match}`)
+
+    // console.log()
+
+    query = Model.find(JSON.parse(queryStr))
     if (path) {
         query.populate({path: path, select:select})
     }
@@ -55,6 +61,9 @@ module.exports = async (Model, reqQuery, path=null, select="-__v -_id") => {
         query = query.sort(sortBy)
     }
 
-    data = await query.select("-__v")
+    data = await query
+    if(!data || !data.length){
+        throw new ErrorResponse("No Data Found!!", 404)
+    }
     return { pagination, data }
 }

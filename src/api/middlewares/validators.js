@@ -14,7 +14,7 @@ module.exports.signUpValidator = {
 module.exports.loginValidator = {
     body : Joi.object({
         email: Joi.string().email().max(50).min(8).trim().required(),
-        password: Joi.string().max(12).min(5).trim().required()
+        password: Joi.string().max(12).min(5).trim().required(),
     })
 }
 
@@ -36,8 +36,10 @@ module.exports.createProductValidator = {
         description: Joi.string().min(10).max(50).trim().required(),
         category: mongoose.Types.ObjectId,
         subcategory: mongoose.Types.ObjectId,
-        model_number: Joi.string().alphanum().required(),
-        release_date: Joi.date().required(),
+        manufacture_details:{
+            model_number: Joi.string().alphanum().required(),
+            release_date: Joi.date().required(),
+        },
         quantity: Joi.number().min(1).max(100).required(),
         pricing: {
             price: Joi.number().min(200).max(10000).required()
@@ -73,8 +75,10 @@ module.exports.updateProductValidator = {
         description: Joi.string().min(10).max(50).trim(),
         category: mongoose.Types.ObjectId,
         subcategory: mongoose.Types.ObjectId,
-        model_number: Joi.string().alphanum(),
-        release_date: Joi.date(),
+        manufacture_details:{
+            model_number: Joi.string().alphanum().required(),
+            release_date: Joi.date().required(),
+        },
         quantity: Joi.number().min(0).max(1000),
         pricing: {
             price: Joi.number().min(200).max(10000)

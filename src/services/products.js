@@ -1,6 +1,8 @@
 const asyncHandler = require("../api/middlewares/asyncHandler")
 const crudOPs = require("../models")
 const paginator = require("../utils/paginator")
+const upload = require("../utils/multer")("product_image")
+const ErrorResponse = require("../utils/errorResponse")
 
 module.exports.getProducts = asyncHandler(async (req, res) =>{
 
@@ -16,6 +18,16 @@ module.exports.createProduct = asyncHandler(async (req, res) =>{
     let requestedData = { ...req.body }
     let data = undefined
 
+    // console.log(req.body)
+    // return res.end()
+    // upload(req, res, (err) =>{
+    //     if (err instanceof multer.MulterError) {
+    //         throw new ErrorResponse(err.message, 400)
+    //       } else if (err) {
+    //         throw new ErrorResponse("An Unhandled Error Occured While Uploading Image!", 500)
+    //       }
+    // })
+
     //below code just checks if the provided category id & subcategory_id exists in db
     //if category_id & subcategory_id not found it will simply throw an error & will be catched by asyncHandler
     await crudOPs.getData("categories", category_id)
@@ -26,6 +38,7 @@ module.exports.createProduct = asyncHandler(async (req, res) =>{
     //Everythinng is fine. product is created.
     res.status(201).send({success:1, message:"Product Created", data: data})
 
+    
 })
 
 module.exports.deleteProduct = asyncHandler(async (req, res) =>{
@@ -39,11 +52,13 @@ module.exports.updateProduct = asyncHandler(async (req, res) =>{
     let data, product_id = req.params.id, requestedData = { ...req.body }
 
     if (requestedData.category) {
-        await crudOPs.getData("categories", requestedData.category)
+        let category = await crudOPs.getData("categories", requestedData.category)
+        requestedData.category = category.category
     }
 
     if (requestedData.subcategory) {
-        await crudOPs.getData("subcategories", requestedData.subcategory)        
+        let subcategory = await crudOPs.getData("subcategories", requestedData.subcategory)     
+        requestedData.subcategory = subcategory.subcategory   
     }
 
     data = await crudOPs.updateData("products", product_id, requestedData);

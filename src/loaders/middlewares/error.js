@@ -28,6 +28,6 @@ module.exports = (err, req, res, next) =>{
 
     res.status(error.statusCode || 500).send({
         success:0,
-        error:error.message || "Server Error"
+        message:error.message || "Server Error"
     })
 }

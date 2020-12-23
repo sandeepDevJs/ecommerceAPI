@@ -24,7 +24,7 @@ router
 router
     .route("/:id")
     .get(getProductById)
-    .put(celebrate(updateProductValidator), updateProduct)
+    .put(updateProduct)
     .delete(deleteProduct)
 
 module.exports = router

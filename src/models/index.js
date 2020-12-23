@@ -42,7 +42,7 @@ module.exports.getData = async (Model, id, filters={}) =>{
     //if no data found then throw an error
     if (!data) {
         throw new ErrorResponse(`No Data Found Associated To ${id}`, 400)
-    }else if (!data.length) {
+    }else if (data.length === 0) {
         let filterFields = Object.keys(filters)
         throw new ErrorResponse(`No Data Found Associated To ${filterFields} !`, 400)
     }

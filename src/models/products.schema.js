@@ -1,6 +1,12 @@
 const mongoose = require('mongoose');
 const slugify = require("slugify")
 var products = new mongoose.Schema({
+
+        // product_image: {
+        //     type: String,
+        //     required: [true, "product image is required"]
+        // },
+
         title: {
             type: String, 
             required: [true, "Title Is Required"]
@@ -17,13 +23,15 @@ var products = new mongoose.Schema({
             type: String,
             required: true
         },
-        model_number: {
-            type: String,
-            required: true
-        },
-        release_date: {
-            type: Date,
-            required: true
+        manufacture_details:{
+            model_number: {
+                type: String,
+                required: true
+            },
+            release_date: {
+                type: Date,
+                required: true
+            }
         },
         slug:{
             type:String,

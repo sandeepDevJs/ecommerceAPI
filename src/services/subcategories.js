@@ -1,6 +1,4 @@
 const asyncHandler = require("../api/middlewares/asyncHandler")
-const SubcategoriesModel = require("../models/subcategory.schema")
-const CategoriesModel = require("../models/category.schema")
 const crudOPs = require("../models")
 const paginator = require("../utils/paginator")
 
