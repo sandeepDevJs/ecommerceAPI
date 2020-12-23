@@ -1,8 +1,8 @@
 const asyncHandler = require("../api/middlewares/asyncHandler");
 const crudOPs = require("../models");
-const ErrorResponse = require("../utils/errorResponse");
 const paginator = require("../utils/paginator")
 const { verify } = require("../utils/encrypter")
+const { generateToken } = require("../utils/jwt")
 
 module.exports.getUsers = asyncHandler(async (req, res) =>{
 
@@ -18,9 +18,10 @@ module.exports.getUserById =  asyncHandler(async (req, res) =>{
 
 module.exports.createUser = asyncHandler(async (req, res) =>{
 
-    let reqData = { ...req.body }, data
+    let reqData = { ...req.body }, data, token
     data = await crudOPs.createData("users", reqData)
-    res.status(201).send({success:1, message:"User Created!", data})
+    token = generateToken(data)
+    res.status(201).send({success:1, message:"User Created!", token})
 
 })
 
@@ -39,14 +40,11 @@ module.exports.updateUser = asyncHandler(async (req, res) =>{
 module.exports.loginUser = asyncHandler(async(req, res) =>{
 
     let { email , password }  = req.body
-
-    let userData = await crudOPs.getData("users", 0, { email:email })
-
-    console.log(userData)
-
+    let userData = await crudOPs.getData("users", 0, { email }, "+password")
     let result = await verify(password, userData[0].password)        
     if (result) {
-        res.send({success:true, message:"You're logged In"})
+        let token = generateToken(userData[0])
+        res.send({success:true, message:"You're logged In", token})
     }else{
         res.status(401).send({success:false, message:"Invalid Credentials!!"})
     }

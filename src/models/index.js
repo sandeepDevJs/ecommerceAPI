@@ -22,7 +22,7 @@ function getModel(modelName) {
     }
 }
 
-module.exports.getData = async (Model, id, filters={}) =>{
+module.exports.getData = async (Model, id, filters={}, select="") =>{
 
     let query, data
     Model = getModel(Model)
@@ -38,7 +38,7 @@ module.exports.getData = async (Model, id, filters={}) =>{
         query = Model.find(filters) //else search by filters, if filters are not given it will return all data.
     }
     // execute query.
-    data = await query.select("-__v")
+    data = await query.select(select)
     //if no data found then throw an error
     if (!data) {
         throw new ErrorResponse(`No Data Found Associated To ${id}`, 400)

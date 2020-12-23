@@ -67,21 +67,3 @@ module.exports.updateSubcategoryValidator = {
         category_id: mongoose.Types.ObjectId
     })
 }
-
-module.exports.updateProductValidator = {
-    body : Joi.object({
-
-        title: Joi.string().min(4).max(20).trim(),
-        description: Joi.string().min(10).max(50).trim(),
-        category: mongoose.Types.ObjectId,
-        subcategory: mongoose.Types.ObjectId,
-        manufacture_details:{
-            model_number: Joi.string().alphanum().required(),
-            release_date: Joi.date().required(),
-        },
-        quantity: Joi.number().min(0).max(1000),
-        pricing: {
-            price: Joi.number().min(200).max(10000)
-        }
-    })
-}

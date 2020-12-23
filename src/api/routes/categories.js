@@ -1,6 +1,7 @@
 const {Router} = require("express")
 const { celebrate } = require("celebrate")
 const { categoryValidator } = require("../middlewares/validators")
+const { auth, authAdmin } = require("../middlewares/auth")
 
 const { getCategories, 
         createCategory, 
@@ -13,13 +14,21 @@ const router = Router()
 
 router
     .route("/")
-    .get(getCategories)
-    .post(celebrate(categoryValidator), createCategory)
+    .get(auth, getCategories)
+    .post(
+        authAdmin,
+        celebrate(categoryValidator), 
+        createCategory
+    )
 
 router
     .route("/:id")
-    .get(getCategoryById)
-    .put(celebrate(categoryValidator), updateCategory)
-    .delete(deleteCategory)
+    .get(auth, getCategoryById)
+    .put(
+        authAdmin, 
+        celebrate(categoryValidator), 
+        updateCategory
+    )
+    .delete(authAdmin, deleteCategory)
 
 module.exports = router

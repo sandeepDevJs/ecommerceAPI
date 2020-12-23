@@ -32,7 +32,8 @@ var users = new mongoose.Schema({
         type: String, 
         min: [5, "password should be atleast 5 characters long"],
         max:[100, "password cannot be more than 10 characters in length"],
-        required: [true, "password is required"]
+        required: [true, "password is required"],
+        select:false
     },
     address: {
         type: String,

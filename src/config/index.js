@@ -12,5 +12,7 @@ module.exports = {
 
     dbUrl : process.env.MONGODB_URI,
 
-    privateKey : process.env.JWT_SECRET
+    privateKey : process.env.JWT_SECRET,
+
+    keyExp: process.env.JWT_EXP
 }

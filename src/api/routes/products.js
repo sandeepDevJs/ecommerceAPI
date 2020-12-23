@@ -1,10 +1,10 @@
 const {Router} = require("express")
 const { celebrate } = require("celebrate")
+const { authAdmin } = require("../middlewares/auth")
 const router = Router()
 
 const { 
-    createProductValidator, 
-    updateProductValidator
+    createProductValidator
 } = require("../middlewares/validators")
 
 const { 
@@ -19,12 +19,16 @@ const {
 router
     .route("/")
     .get(getProducts)
-    .post(celebrate(createProductValidator), createProduct)
+    .post(
+        authAdmin,
+        celebrate(createProductValidator), 
+        createProduct
+    )
 
 router
     .route("/:id")
-    .get(getProductById)
-    .put(updateProduct)
-    .delete(deleteProduct)
+    .get(authAdmin, getProductById)
+    .put(authAdmin, updateProduct)
+    .delete(authAdmin, deleteProduct)
 
 module.exports = router
