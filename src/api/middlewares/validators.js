@@ -23,7 +23,6 @@ module.exports.updateValidator = {
     body : Joi.object({
         name: Joi.string().max(20).min(4).trim(),
         email: Joi.string().email().max(50).min(8).trim(),
-        password: Joi.string().max(12).min(5).trim(),
         address: Joi.string().max(30).min(6).trim()
     }),
 
@@ -65,5 +64,17 @@ module.exports.updateSubcategoryValidator = {
     body: Joi.object({
         subcategory: Joi.string().min(3).max(16),
         category_id: mongoose.Types.ObjectId
+    })
+}
+
+module.exports.emailValidator = {
+    body: Joi.object({
+        email: Joi.string().email().max(50).min(8).trim().required(),
+    })
+}
+
+module.exports.passwordValidator = {
+    body: Joi.object({
+        password: Joi.string().max(12).min(5).trim().required()
     })
 }

@@ -1,16 +1,28 @@
 const {Router} = require("express")
 const {celebrate }  = require("celebrate")
 const { 
-    loginValidator
+    loginValidator,
+    emailValidator,
+    passwordValidator
 } = require("../middlewares/validators")
 
 const router = Router()
 const { 
-    loginUser
+    loginUser,
+    forgotPassword,
+    resetPassword
 } = require("../../services/auth")
 
 router
     .route("/login")
     .post(celebrate(loginValidator), loginUser)
+
+router
+    .route("/forgotPassword")
+    .post(celebrate(emailValidator), forgotPassword)
+
+router
+    .route("/resetPassword/:token", resetPassword)
+    .put(celebrate(passwordValidator), resetPassword)
 
 module.exports = router

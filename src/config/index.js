@@ -8,11 +8,25 @@ if (ifErr.error) {
 module.exports = {
     port: parseInt(process.env.PORT),
 
-    apiPrefix: "/api",
+    apiPrefix: process.env.apiPrefix,
+
+    homeURL: process.env.url,
 
     dbUrl : process.env.MONGODB_URI,
 
     privateKey : process.env.JWT_SECRET,
 
-    keyExp: process.env.JWT_EXP
+    keyExp: process.env.JWT_EXP,
+
+    smtp_host: process.env.SMTP_HOST,
+
+    smtp_port: process.env.SMTP_PORT,
+
+    smtp_email: process.env.SMTP_EMAIL,
+
+    smtp_password: process.env.SMTP_PASS,
+
+    from_email: process.env.FROM_EMAIL,
+
+    from_name: process.env.FROM_NAME
 }
