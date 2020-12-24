@@ -18,6 +18,7 @@ router
     .route("/")
     .get(auth, getSubcategories)
     .post(
+        auth,
         authAdmin,
         celebrate(subcategoryValidator), 
         createSubcategory
@@ -27,10 +28,11 @@ router
     .route("/:id")
     .get(auth, getSubCategoryById)
     .put(
+        auth,
         authAdmin,
         celebrate(updateSubcategoryValidator), 
         updateSubCategory
     )
-    .delete(authAdmin, deleteSubCategory)
+    .delete(auth, authAdmin, deleteSubCategory)
 
 module.exports = router

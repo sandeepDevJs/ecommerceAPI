@@ -12,29 +12,24 @@ const {
     getUserById, 
     createUser, 
     deleteUser, 
-    updateUser, 
-    loginUser
+    updateUser
 } = require("../../services/users")
-const { authAdmin } = require("../middlewares/auth")
+const { auth, authAdmin } = require("../middlewares/auth")
 
 router
     .route("/")
-    .get(authAdmin, getUsers)
+    .get(auth, authAdmin, getUsers)
     .post(celebrate(signUpValidator),createUser)
-
-router
-    .route("/login")
-    .post(celebrate(loginValidator) ,loginUser)
-
-
+    
 router
     .route("/:id")
-    .get(authAdmin, getUserById)
+    .get(auth, authAdmin, getUserById)
     .put(
+        auth,
         authAdmin,
         celebrate(updateValidator), 
         updateUser
     )
-    .delete(authAdmin, deleteUser)
+    .delete(auth, authAdmin, deleteUser)
 
 module.exports = router

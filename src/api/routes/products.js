@@ -1,6 +1,6 @@
 const {Router} = require("express")
 const { celebrate } = require("celebrate")
-const { authAdmin } = require("../middlewares/auth")
+const { auth, authAdmin } = require("../middlewares/auth")
 const router = Router()
 
 const { 
@@ -20,6 +20,7 @@ router
     .route("/")
     .get(getProducts)
     .post(
+        auth,
         authAdmin,
         celebrate(createProductValidator), 
         createProduct
@@ -27,8 +28,8 @@ router
 
 router
     .route("/:id")
-    .get(authAdmin, getProductById)
-    .put(authAdmin, updateProduct)
-    .delete(authAdmin, deleteProduct)
+    .get(auth, authAdmin, getProductById)
+    .put(auth, authAdmin, updateProduct)
+    .delete(auth, authAdmin, deleteProduct)
 
 module.exports = router
