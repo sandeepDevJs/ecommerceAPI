@@ -26,6 +26,12 @@ module.exports = (err, req, res, next) =>{
         error = new ErrorResponse(err.details.get("body").details[0].message, 400)
     }
 
+    console.log(err)
+
+    // if(err.error.reason.kind === "ObjectId"){
+    //     error = new ErrorResponse(`Invalid ${err.error.reason.path} !! `, 400)
+    // }
+
     res.status(error.statusCode || 500).send({
         success:0,
         message:error.message || "Server Error"

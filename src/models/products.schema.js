@@ -39,7 +39,8 @@ var products = new mongoose.Schema({
         },
         quantity: {
             type: Number,
-            required: true
+            required: true,
+            min:[0, "Out Of Stock!!"]
         },
         pricing: {
             price: {

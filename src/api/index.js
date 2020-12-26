@@ -4,14 +4,18 @@ const products = require("./routes/products")
 const categories = require("./routes/categories")
 const subcategories = require("./routes/subcategories")
 const auth = require("./routes/auth")
+const cart = require("./routes/cart")
 
 module.exports = () =>{
 
     const routes = Router()
+
     routes.use("/auth", auth)
     routes.use("/users", users)
     routes.use("/products", products)
     routes.use("/categories", categories)
     routes.use("/subcategories", subcategories)
+    routes.use("/carts", cart)
+    
     return routes
 }

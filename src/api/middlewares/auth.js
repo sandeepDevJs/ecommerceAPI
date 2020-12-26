@@ -23,7 +23,7 @@ module.exports.authAdmin = asyncHandler( async (req, res, next) => {
         if (req.userData.isAdmin) {
             return next()
         }
-        return next(new ErrorResponse("You're Not Authorize To Access This Particular Route", 401))
+        return next(new ErrorResponse("You're Not Authorize To Access This Particular Route", 403))
     }
     return next(new ErrorResponse("You're Not Authorize To Access This Particular Route", 403))
 

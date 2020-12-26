@@ -50,7 +50,6 @@ module.exports.forgotPassword = asyncHandler( async (req, res) => {
         })
 
     } catch (error) {
-        console.log(error)
         throw new ErrorResponse("Email Could Not Be Sent", 500)
     }
     res.send({success:true, message:"Email Sent!!"})

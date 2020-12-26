@@ -2,6 +2,7 @@ const ProductsModel = require("./products.schema")
 const CategoriesModel = require("./category.schema")
 const SubcategoriesModel = require("./subcategory.schema")
 const usersModel = require("./users.schema")
+const carts = require("./cart.schema")
 const ErrorResponse = require("../utils/errorResponse")
 
 function getModel(modelName) {
@@ -17,6 +18,9 @@ function getModel(modelName) {
 
         case "users":
             return usersModel
+
+        case "carts":
+            return carts
         default:
             return false
     }

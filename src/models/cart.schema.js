@@ -1,43 +1,33 @@
 var mongoose = require('mongoose');
 var cart = mongoose.Schema({
+
+    userId:{
+        type: mongoose.Types.ObjectId,
+        required:true
+    },
+
     total: {
-        type: Number, 
-        required: true
+        type: Number,
     },
     status: {
         type: Boolean, 
-        required: true
+        default:0
     },
     products: [
         {
-            product_id: {
-                type: Schema.Types.ObjectId, 
+            productId:{
+                type: mongoose.Types.ObjectId, 
+                ref:"products",
                 required: true
             },
-            title: {
-                type: String, 
-                required: true
-            },
-            description: {
-                type: String, 
-                required: true
-            },
-            category: {
-                type: String, 
-                required: true
-            },
-            subcategoory: {
-                type: String, 
-                required: true
-            },
-            quantity: {
-                type: Number, 
-                required: true
-            },
-            price: {
-                type: Number, 
-                required: true
+
+            quantity:{
+                type:Number,
+                default:1,
+                min:[0, "quantity cannot be less than 0"]
             }
-        }
+        },
     ]
 }); 
+
+module.exports = mongoose.model("carts", cart)
