@@ -1,3 +1,11 @@
+
+/**
+ * 
+ * This file holds all config from enviroment
+ * 
+ */
+
+
 const dotenv = require("dotenv")
 
 ifErr = dotenv.config()

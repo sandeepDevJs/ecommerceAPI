@@ -15,13 +15,14 @@ var categories = new mongoose.Schema(
     }
 ); 
 
+//Before removing category reset product category
 categories.pre("remove", async function (next) {
     await this.model("subcategories").deleteMany({ category_id : this._id })
     await this.model("products").updateMany({ category : this._id }, { category : undefined, subcategory : undefined})
     next()
 })
 
-
+//before saving category check if already there
 categories.pre("save", async function(next){
     let allData = await this.model("categories").find({})
     allData.forEach(data => {

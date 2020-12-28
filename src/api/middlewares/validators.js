@@ -1,3 +1,11 @@
+
+/**
+ * 
+ * Contains All Sorts of Validations for celebrate
+ * 
+ */
+
+
 const { Joi } = require("celebrate")
 const mongoose = require("mongoose")
 

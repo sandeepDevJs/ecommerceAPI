@@ -50,6 +50,7 @@ var products = new mongoose.Schema({
         }
     }); 
 
+    //before saving product create slug
     products.pre("save", async function(next){
         this.slug = slugify(this.title, {lower:true, strict:true})
         let category = await this.model("categories").findById(this.category)
@@ -59,10 +60,11 @@ var products = new mongoose.Schema({
         next()
     })
 
-
+    //before updating check if it updating title
     products.pre("updateOne", async function(next){
         let dataToBeUpdated = this.getUpdate()
         if (dataToBeUpdated.title) {
+            //then update slug
             dataToBeUpdated.slug = slugify(dataToBeUpdated.title, {lower:true, strict:true})
             this.updateOne({}, dataToBeUpdated).exec()
         }

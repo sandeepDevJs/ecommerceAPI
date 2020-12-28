@@ -1,3 +1,16 @@
+
+
+/**
+ * 
+ * This File Holds all services related to users
+ * 
+ * these functions are imported into users routes
+ * =====================================================
+ * PATH: api/users/
+ * 
+ */
+
+
 const asyncHandler = require("../api/middlewares/asyncHandler");
 const crudOPs = require("../models");
 const paginator = require("../utils/paginator")

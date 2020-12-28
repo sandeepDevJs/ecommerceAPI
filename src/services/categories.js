@@ -1,12 +1,38 @@
+
+
+/**
+ * 
+ * This File Holds all services related to Category
+ * 
+ * these functions are imported into category routes
+ * =====================================================
+ * PATH: api/categories/
+ * 
+ */
+
+
 const asyncHandler = require("../api/middlewares/asyncHandler")
 const crudOPs = require("../models")
 const paginator = require("../utils/paginator")
+
+/**
+   Access : logged in user
+ 
+    Paginator will paginate if any, sorting, selection & limitation provided in req.query
+    it will handle all
+
+ */
 
 module.exports.getCategories = asyncHandler(async (req, res, next) => {
  
     let { pagination, data } = await paginator("categories", req.query, "subcategories", "-_id -__v")
     res.status(200).send({success:true, pagination, data})    
 })
+
+/**
+ * Access : Admin
+ */
+
 
 module.exports.createCategory = asyncHandler( async (req, res, next) => {
 
@@ -15,11 +41,19 @@ module.exports.createCategory = asyncHandler( async (req, res, next) => {
 
 })
 
+/**
+ * Access : Admin
+ */
+
 module.exports.deleteCategory = asyncHandler( async (req, res) => {
     let id = req.params.id
     let data = await crudOPs.deleteData("categories", id)
     return res.send({success:true, data})
 } )
+
+/**
+ * Access : logged in user
+ */
 
 module.exports.getCategoryById = asyncHandler( async (req, res) => {
 
@@ -27,6 +61,10 @@ module.exports.getCategoryById = asyncHandler( async (req, res) => {
     data = await crudOPs.getData("categories", id)
     return res.send({success:true, data})
 })
+
+/**
+ * Access : Admin
+ */
 
 module.exports.updateCategory = asyncHandler( async (req, res) => {
 

@@ -1,10 +1,20 @@
+/**
+ * This Files Holds All CRUD functions with models
+ */
+
 const ProductsModel = require("./products.schema")
 const CategoriesModel = require("./category.schema")
 const SubcategoriesModel = require("./subcategory.schema")
 const usersModel = require("./users.schema")
 const carts = require("./cart.schema")
 const ErrorResponse = require("../utils/errorResponse")
+const mongoose = require("mongoose")
 
+
+/**
+ * @param  {String} modelName
+ * @description Takes name of the model and returns Model
+ */
 function getModel(modelName) {
     switch (modelName) {
         case "products":
@@ -26,9 +36,22 @@ function getModel(modelName) {
     }
 }
 
+
+/**
+ * @param  {String} Model
+ * @param  {mongoose.Types._ObjectId} id
+ * @param  {Object} filters={}
+ * @param  {String} select=""
+ * 
+ * @desc    returns Data based on model & 
+ *          filters & selector fields
+ * 
+ */
 module.exports.getData = async (Model, id, filters={}, select="") =>{
 
     let query, data
+
+    //get the model
     Model = getModel(Model)
 
     //if model name is invalid then throw an error
@@ -53,8 +76,17 @@ module.exports.getData = async (Model, id, filters={}, select="") =>{
     return data
 }
 
+/**
+ * @param  {String} ModelName
+ * @param  {mongoose.Types.ObjectId} id
+ * 
+ * @desc    Deletes data by id
+ * 
+ */
 module.exports.deleteData = async (ModelName, id) => {
     let data, Model
+
+    //get the model
     Model = getModel(ModelName)
     //if model name is invalid then throw an error
     if(!Model) throw new ErrorResponse("Internal error!!", 500)
@@ -70,6 +102,11 @@ module.exports.deleteData = async (ModelName, id) => {
     return true
 }
 
+
+/**
+ * @param  {String} ModelName
+ * @param  {Object} anyData
+ */
 module.exports.createData = async (ModelName, anyData) => {
 
     let data, Model
@@ -81,6 +118,12 @@ module.exports.createData = async (ModelName, anyData) => {
     return data;
 }
 
+
+/**
+ * @param  {String} ModelName
+ * @param  {mongoose.Types.ObjectId} id
+ * @param  {Object} anyData
+ */
 module.exports.updateData = async (ModelName, id, anyData) => {
 
     let data, Model

@@ -62,6 +62,7 @@ var users = new mongoose.Schema({
     }
 }); 
 
+//before saving encrypt user password
 users.pre("save", async function (next) {
     this.password = await encrypt(this.password)    
     next()

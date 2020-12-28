@@ -1,3 +1,10 @@
+/**
+ * 
+ * custom Error Handler
+ * 
+ */
+
+
 class ErrorResponse extends Error{
 
     constructor(message, statusCode){

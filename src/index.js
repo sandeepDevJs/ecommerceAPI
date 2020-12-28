@@ -5,10 +5,12 @@ const app = express()
 const port = process.env.PORT || 4000
 app.use(express.json())
 
+//Load all DB, middlerwares & routes
 loaders(express, app)
 
 app.listen(port, () => console.log(`server Strated At Port ${port}`.cyan.inverse.underline.bold))
 
+//UNHANDLED ERROR HANDLINGs
 process.on("unhandledRejection", (error) => {
     console.log("ERROR: ", error)
     process.exit(1)

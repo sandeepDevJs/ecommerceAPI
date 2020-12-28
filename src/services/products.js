@@ -1,15 +1,42 @@
+
+/**
+ * 
+ * This File Holds all services related to products
+ * 
+ * these functions are imported into product routes
+ * ==================================================
+ * PATH: api/products
+ * 
+ */
+
+
 const asyncHandler = require("../api/middlewares/asyncHandler")
 const crudOPs = require("../models")
 const paginator = require("../utils/paginator")
 const upload = require("../utils/multer")("product_image")
-const ErrorResponse = require("../utils/errorResponse")
 
+
+/*
+    Paginator will paginate if any, sorting, selection & limitation provided in req.query
+    it will handle all
+
+    Eg:-
+    Get: Products?category=tech&subcategory=watch&limit=10
+
+ */
 module.exports.getProducts = asyncHandler(async (req, res) =>{
 
     let { pagination, data } = await paginator("products", req.query)
     res.status(200).send({success:true, pagination, data})    
 
 })
+
+
+/**
+ * POST: products/
+ * 
+ * access: Admin
+ */
 
 module.exports.createProduct = asyncHandler(async (req, res) =>{
 
@@ -41,6 +68,13 @@ module.exports.createProduct = asyncHandler(async (req, res) =>{
     
 })
 
+
+/**
+ * DELETE: products/
+ * 
+ * access: Admin
+ */
+
 module.exports.deleteProduct = asyncHandler(async (req, res) =>{
     let product_id = req.params.id 
     await crudOPs.deleteData("products", product_id)
@@ -64,6 +98,12 @@ module.exports.updateProduct = asyncHandler(async (req, res) =>{
     data = await crudOPs.updateData("products", product_id, requestedData);
     return res.send({success:true, data_modified:data})
 })
+
+/**
+ * POST: products/
+ * 
+ * access: public
+ */
 
 module.exports.getProductById = asyncHandler( async (req, res) =>{
 

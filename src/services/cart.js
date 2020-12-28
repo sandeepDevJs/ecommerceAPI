@@ -1,6 +1,26 @@
+/**
+ * 
+ * This File Holds all services related to carts
+ * 
+ * these functions are imported into routes
+ * ===============================================
+ * PATH: api/carts
+ * 
+ */
+
+
 const crudOPs = require("../models/index");
 const asyncHandler = require("../api/middlewares/asyncHandler");
 const cartModel = require("../models/cart.schema")
+
+/**
+ * @param  {string} productId
+ * @param  {Number} quantity=null
+ * 
+ * @desc   Checks if product is in stock
+ *         if quantity provided then it'll 
+ *         compare quantity with provided one
+ */
 const inStock = async (productId, quantity=null) =>{
     
     let data = await crudOPs.getData("products", productId)
@@ -17,8 +37,15 @@ const inStock = async (productId, quantity=null) =>{
     return false
 }
 
+
+/**
+ * Access : logged in user
+ */
+
 module.exports.addToCart = asyncHandler( async (req, res, next) =>{
     let product_id = req.params.productId, userId = req.userData.id;
+
+    //if flag is true then return an error
     let return_flag = 0
     try {
         //if no data found then it will throw an error of status code 400
@@ -40,7 +67,7 @@ module.exports.addToCart = asyncHandler( async (req, res, next) =>{
             return res.status(400).send({success:false, message:"product Already Exists!!, Try Updating Quantity."})
         }
 
-        //add product id into cart
+        //add product id into cart & decrease quantity
         await crudOPs.updateData("carts", cartData[0]._id, { $push: { products: { productId:product_id } } })
         await crudOPs.updateData("products", product_id , { $inc: { quantity:-1 } })
 
@@ -61,12 +88,18 @@ module.exports.addToCart = asyncHandler( async (req, res, next) =>{
 
 })
 
+//updates quantity
+/**
+ * Access : logged in user
+ */
+
 module.exports.updateCart = asyncHandler( async (req, res, next) => {
  
     let productId = req.params.productId, userId = req.userData.id
     let cartData = await crudOPs.getData("carts", 0, {userId})
     let quantity = req.query.quantity || 1
 
+    //checks if product is in cart
     let isProductInCart = cartData[0].products.find(cartItem => cartItem.productId == productId)
     if (!isProductInCart) {
         return res.status(200).send({success:false, message:"Product Is Not In Cart!!"})
@@ -76,18 +109,24 @@ module.exports.updateCart = asyncHandler( async (req, res, next) => {
         return res.status(200).send({success:false, message:"Not Enough Quantity Available!!"})
     }
 
+    //update cart
     await cartModel.updateOne({
         _id: cartData[0]._id, 
         "products.productId":productId
     }, 
     { 
-        "products.$.quantity" : quantity 
+        "products.$.quantity":quantity 
     })
 
+    //decrease quantity
     await crudOPs.updateData("products", productId, {$inc : { quantity: -quantity }})
     res.status(200).send({success:false, message:"Quantity Updated!!"})
 })
 
+
+/**
+ * Access : logged in user
+ */
 
 module.exports.deleteItem = asyncHandler( async (req, res, next) => {
 
@@ -117,6 +156,11 @@ module.exports.deleteItem = asyncHandler( async (req, res, next) => {
     res.send({success:true, message:"Data Deleted Successfully!!"})
 
 } )
+
+/**
+ * Access : logged in user
+ */
+
 
 module.exports.getcart = asyncHandler( async (req, res, next) => {
     let userId = req.userData.id

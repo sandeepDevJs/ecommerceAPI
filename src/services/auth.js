@@ -1,3 +1,13 @@
+
+/**
+ * 
+ * This File Holds all services related to Authetication
+ * 
+ * these functions are imported into auth routes
+ * 
+ */
+
+
 const crypto = require("crypto")
 const asyncHandler = require("../api/middlewares/asyncHandler")
 const crudOPs = require("../models")
@@ -27,22 +37,30 @@ module.exports.forgotPassword = asyncHandler( async (req, res) => {
 
     let { email } = req.body
     let userData = await crudOPs.getData("users", 0, { email })
+
+    //generate reset token
     const resetToken = crypto.randomBytes(20).toString('hex')
+
+    //hash token
     const resetPasswordToken =  crypto
                                 .createHash("sha256")
                                 .update(resetToken)
                                 .digest('hex')
     
+    //set token expiry
     const tokenExpiry = Date.now() + 10 * 60 * 1000
 
+    // insert token into db
     crudOPs.updateData("users", userData[0]._id, { resetPasswordToken, tokenExpiry })
 
+    //create url
     const url = config.homeURL+"resetPassword/"+resetToken
 
+    //set mmessage
     const message = "you are receiving this message because you have requested the reset of a password. Please Make A PUT Request To "+url
 
     try {
-        
+        //send email
         await sendEmail({
             email:userData[0].email,
             subject: "Password Reset Token",
@@ -56,18 +74,23 @@ module.exports.forgotPassword = asyncHandler( async (req, res) => {
 
 })
 
+//reset token
 module.exports.resetPassword = async (req, res, next) =>{
     let requestedToken = req.params.token
+
+    // hash user token
     const resetPasswordToken =  crypto
                                 .createHash("sha256")
                                 .update(requestedToken)
                                 .digest('hex')
     
     try {
+        //if no data get then it'll throw an error
         let data = await crudOPs.getData("users", 0, {resetPasswordToken, tokenExpiry : {$gt : Date.now()}})
         let dataToBeUpdated = {
             password: await encrypt(req.body.password)
         }
+        //update data
         await crudOPs.updateData("users",data[0]._id, dataToBeUpdated)
         res.send({success:true, message:"Password Changed Successfully!!"})
     } catch (error) {

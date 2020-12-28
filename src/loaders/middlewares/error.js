@@ -1,3 +1,10 @@
+
+/**
+ * 
+ * Custom Error Handler Middleware
+ * 
+ */
+
 const ErrorResponse = require("../../utils/errorResponse")
 const { isCelebrateError } = require("celebrate")
 module.exports = (err, req, res, next) =>{

@@ -12,7 +12,7 @@ var subcategories = new mongoose.Schema({
     }
 }); 
 
-
+//before saving check for duplicate
 subcategories.pre("save", async function(next){
     let allData = await subcats.find({})
     allData.forEach(data => {

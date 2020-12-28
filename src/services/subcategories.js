@@ -1,3 +1,15 @@
+
+/**
+ * 
+ * This File Holds all services related to Subcategory
+ * 
+ * these functions are imported into Subcategory routes
+ * =====================================================
+ * PATH: api/subcategories/
+ * 
+ */
+
+
 const asyncHandler = require("../api/middlewares/asyncHandler")
 const crudOPs = require("../models")
 const paginator = require("../utils/paginator")
