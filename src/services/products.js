@@ -1,20 +1,17 @@
-
 /**
- * 
+ *
  * This File Holds all services related to products
- * 
+ *
  * these functions are imported into product routes
  * ==================================================
  * PATH: api/products
- * 
+ *
  */
 
-
-const asyncHandler = require("../api/middlewares/asyncHandler")
-const crudOPs = require("../models")
-const paginator = require("../utils/paginator")
-const upload = require("../utils/multer")("product_image")
-
+const asyncHandler = require("../api/middlewares/asyncHandler");
+const crudOPs = require("../models");
+const paginator = require("../utils/paginator");
+const config = require("../config");
 
 /*
     Paginator will paginate if any, sorting, selection & limitation provided in req.query
@@ -24,92 +21,83 @@ const upload = require("../utils/multer")("product_image")
     Get: Products?category=tech&subcategory=watch&limit=10
 
  */
-module.exports.getProducts = asyncHandler(async (req, res) =>{
-
-    let { pagination, data } = await paginator("products", req.query)
-    res.status(200).send({success:true, pagination, data})    
-
-})
-
+module.exports.getProducts = asyncHandler(async (req, res) => {
+	let { pagination, data } = await paginator("products", req.query);
+	res.status(200).send({ success: true, pagination, data });
+});
 
 /**
  * POST: products/
- * 
+ *
  * access: Admin
  */
 
-module.exports.createProduct = asyncHandler(async (req, res) =>{
+module.exports.createProduct = asyncHandler(async (req, res) => {
+	let requestedData = { ...req.body };
+	let data = undefined;
 
-    let category_id = req.body.category
-    let subcategory_id = req.body.subcategory
-    let requestedData = { ...req.body }
-    let data = undefined
-
-    // console.log(req.body)
-    // return res.end()
-    // upload(req, res, (err) =>{
-    //     if (err instanceof multer.MulterError) {
-    //         throw new ErrorResponse(err.message, 400)
-    //       } else if (err) {
-    //         throw new ErrorResponse("An Unhandled Error Occured While Uploading Image!", 500)
-    //       }
-    // })
-
-    //below code just checks if the provided category id & subcategory_id exists in db
-    //if category_id & subcategory_id not found it will simply throw an error & will be catched by asyncHandler
-    await crudOPs.getData("categories", category_id)
-    await crudOPs.getData("subcategories", subcategory_id)
-
-    data = await crudOPs.createData("products", requestedData)
-
-    //Everythinng is fine. product is created.
-    res.status(201).send({success:1, message:"Product Created", data: data})
-
-    
-})
-
+	let dataToBeSaved = {
+		product_image: config.homeURL + "images/" + req.file.filename,
+		title: requestedData.title,
+		description: requestedData.description,
+		category: requestedData.category,
+		subcategory: requestedData.subcategory,
+		manufacture_details: {
+			model_number: requestedData.model_number,
+			release_date: requestedData.release_date,
+		},
+		quantity: requestedData.quantity,
+		pricing: {
+			price: 1000,
+		},
+	};
+	data = await crudOPs.createData("products", dataToBeSaved);
+	res.status(201).send({ success: 1, message: "Product Created", data: data });
+});
 
 /**
  * DELETE: products/
- * 
+ *
  * access: Admin
  */
 
-module.exports.deleteProduct = asyncHandler(async (req, res) =>{
-    let product_id = req.params.id 
-    await crudOPs.deleteData("products", product_id)
-    return res.send({success:true, message:"Data Deleted!!"})
-})
+module.exports.deleteProduct = asyncHandler(async (req, res) => {
+	let product_id = req.params.id;
+	await crudOPs.deleteData("products", product_id);
+	return res.send({ success: true, message: "Data Deleted!!" });
+});
 
-module.exports.updateProduct = asyncHandler(async (req, res) =>{
-    
-    let data, product_id = req.params.id, requestedData = { ...req.body }
+module.exports.updateProduct = asyncHandler(async (req, res) => {
+	let data,
+		product_id = req.params.id,
+		requestedData = { ...req.body };
 
-    if (requestedData.category) {
-        let category = await crudOPs.getData("categories", requestedData.category)
-        requestedData.category = category.category
-    }
+	if (requestedData.category) {
+		let category = await crudOPs.getData("categories", requestedData.category);
+		requestedData.category = category.category;
+	}
 
-    if (requestedData.subcategory) {
-        let subcategory = await crudOPs.getData("subcategories", requestedData.subcategory)     
-        requestedData.subcategory = subcategory.subcategory   
-    }
+	if (requestedData.subcategory) {
+		let subcategory = await crudOPs.getData(
+			"subcategories",
+			requestedData.subcategory
+		);
+		requestedData.subcategory = subcategory.subcategory;
+	}
 
-    data = await crudOPs.updateData("products", product_id, requestedData);
-    return res.send({success:true, data_modified:data})
-})
+	data = await crudOPs.updateData("products", product_id, requestedData);
+	return res.send({ success: true, data_modified: data });
+});
 
 /**
  * POST: products/
- * 
+ *
  * access: public
  */
 
-module.exports.getProductById = asyncHandler( async (req, res) =>{
-
-    let data, product_id = req.params.id
-    data = await crudOPs.getData("products", product_id)
-    res.status(200).send({success:true, data})
-
-})
-
+module.exports.getProductById = asyncHandler(async (req, res) => {
+	let data,
+		product_id = req.params.id;
+	data = await crudOPs.getData("products", product_id);
+	res.status(200).send({ success: true, data });
+});
