@@ -33,14 +33,14 @@ module.exports.updateValidator = {
 
 module.exports.createProductValidator = {
 	body: Joi.object({
-		title: Joi.string().min(4).max(20).trim().required(),
-		description: Joi.string().min(10).max(50).trim().required(),
+		title: Joi.string().min(4).max(200).trim().required(),
+		description: Joi.string().min(10).max(500).trim().required(),
 		category: mongoose.Types.ObjectId,
 		subcategory: mongoose.Types.ObjectId,
 		model_number: Joi.string().alphanum().required(),
 		release_date: Joi.date().required(),
 		quantity: Joi.number().min(1).max(100).required(),
-		price: Joi.number().min(200).max(10000).required(),
+		price: Joi.number().min(200).max(400000).required(),
 	}),
 };
 
