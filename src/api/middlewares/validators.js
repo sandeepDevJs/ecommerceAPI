@@ -76,3 +76,11 @@ module.exports.passwordValidator = {
 		password: Joi.string().max(12).min(5).trim().required(),
 	}),
 };
+
+module.exports.reviewValidator = {
+	body: Joi.object({
+		title: Joi.string().min(4).max(200).trim().required(),
+		text: Joi.string().min(10).max(500).trim().required(),
+		rating: Joi.number().min(1).max(5).required(),
+	}),
+};

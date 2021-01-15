@@ -96,8 +96,8 @@ module.exports.updateProduct = asyncHandler(async (req, res) => {
  */
 
 module.exports.getProductById = asyncHandler(async (req, res) => {
-	let data,
-		product_id = req.params.id;
+	let data;
+	let product_id = req.params.id;
 	data = await crudOPs.getData("products", product_id);
 	res.status(200).send({ success: true, data });
 });
