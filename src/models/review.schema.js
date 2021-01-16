@@ -34,6 +34,51 @@ var ReviewSchema = new mongoose.Schema({
 	},
 });
 
-ReviewSchema.index({ user: 1 }, { unique: true });
+ReviewSchema.pre("save", async function (next) {
+	try {
+		let data = this.model("products").findById(this.productId);
+		if (!data) {
+			next(new ErrorResponse("No Data Found Associated To Product Id!", 404));
+			return false;
+		}
+		next();
+	} catch (error) {
+		next(error);
+	}
+});
+
+ReviewSchema.statics.getAverageRating = async function (productId) {
+	const obj = await this.aggregate([
+		{
+			$match: { productId },
+		},
+		{
+			$group: {
+				_id: "$productId",
+				avgRating: { $avg: "$rating" },
+			},
+		},
+	]);
+
+	console.log(obj);
+
+	try {
+		await this.model("products").findByIdAndUpdate(productId, {
+			avgRating: obj[0].avgRating,
+		});
+	} catch (error) {
+		next(error);
+	}
+};
+
+ReviewSchema.post("save", async function () {
+	console.log("after Save");
+	await this.constructor.getAverageRating(this.productId);
+});
+
+ReviewSchema.pre("remove", async function (next) {
+	await this.constructor.getAverageRating(this.productId);
+	next();
+});
 
 module.exports = mongoose.model("reviews", ReviewSchema);

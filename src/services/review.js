@@ -1,5 +1,7 @@
 const asyncHandler = require("../api/middlewares/asyncHandler");
 const crudOPs = require("../models");
+const RevirewModel = require("../models/review.schema");
+const ErrorResponse = require("../utils/errorResponse");
 const paginator = require("../utils/paginator");
 
 module.exports.getReviewById = asyncHandler(async (req, res) => {
@@ -13,7 +15,9 @@ module.exports.getReviewById = asyncHandler(async (req, res) => {
 });
 
 module.exports.getReviews = asyncHandler(async (req, res) => {
-	let { pagination, data } = await paginator("reviews", {});
+	let { pagination, data } = await paginator("reviews", {
+		user: req.userData.id,
+	});
 	res.status(200).send({ success: true, pagination, data });
 });
 
@@ -35,5 +39,32 @@ module.exports.addReview = asyncHandler(async (req, res) => {
 	reviewData.user = req.userData.id;
 
 	let data = await crudOPs.createData("reviews", reviewData);
+	res.status(200).send({ success: true, data });
+});
+
+module.exports.updateReview = asyncHandler(async (req, res, next) => {
+	let reviewData = { ...req.body };
+	let reviewId = req.params.id;
+
+	let reviews = await RevirewModel.findById(reviewId);
+
+	console.log(reviews);
+	console.log(req.userData.id);
+
+	if (reviews.user != req.userData.id) {
+		next(
+			new ErrorResponse(
+				"You Are Not Authorized To Make Changes In This Review!",
+				401
+			)
+		);
+
+		return false;
+	}
+
+	let data = await RevirewModel.findByIdAndUpdate(reviewId, reviewData, {
+		new: true,
+		runValidators: true,
+	});
 	res.status(200).send({ success: true, data });
 });

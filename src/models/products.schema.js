@@ -48,6 +48,13 @@ var products = new mongoose.Schema({
 			required: true,
 		},
 	},
+
+	avgRating: {
+		type: Number,
+		default: 0,
+		min: [0, "Rating can't be less than 0"],
+		max: [0, "Rating can't be greater than 5"],
+	},
 });
 
 //before saving product create slug

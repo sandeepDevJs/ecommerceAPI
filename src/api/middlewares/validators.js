@@ -84,3 +84,11 @@ module.exports.reviewValidator = {
 		rating: Joi.number().min(1).max(5).required(),
 	}),
 };
+
+module.exports.updateReviewValidator = {
+	body: Joi.object({
+		title: Joi.string().min(4).max(200).trim(),
+		text: Joi.string().min(5).max(500).trim(),
+		rating: Joi.number().min(1).max(5),
+	}),
+};
