@@ -11,29 +11,7 @@
 const crudOPs = require("../models/index");
 const asyncHandler = require("../api/middlewares/asyncHandler");
 const cartModel = require("../models/cart.schema");
-
-/**
- * @param  {string} productId
- * @param  {Number} quantity=null
- *
- * @desc   Checks if product is in stock
- *         if quantity provided then it'll
- *         compare quantity with provided one
- */
-const inStock = async (productId, quantity = null) => {
-	let data = await crudOPs.getData("products", productId);
-	if (!quantity) {
-		if (data.quantity > 0) {
-			return true;
-		}
-		return false;
-	} else {
-		if (data.quantity > quantity) {
-			return true;
-		}
-	}
-	return false;
-};
+const productModel = require("../models/products.schema");
 
 /**
  * Access : logged in user
@@ -45,93 +23,119 @@ module.exports.addToCart = asyncHandler(async (req, res, next) => {
 
 	let cart = await cartModel.findOne({ userId });
 
+	//if no cart then create one
 	if (!cart) {
 		cart = await crudOPs.createData("carts", { userId });
 	}
 
-	let data = await cartModel.updateOne(
+	let isInStock = await productModel.isInStock(product_id);
+
+	//if not in stock
+	if (!isInStock) {
+		return res.status(200).send({ success: 0, message: "Out Of Stock!" });
+	}
+
+	//Add product
+	await cartModel.updateOne(
 		{ userId },
-		{ $addToSet: { products: { productId: product_id } } }
+		{ $addToSet: { products: { productId: product_id } } },
+		{ runValidators: true }
 	);
-
-	console.log(data);
-
-	// await crudOPs.updateData("carts", cart._id, {
-	// 	$addToSet: { products: [{ productId: product_id }] },
-	// });
-	// await crudOPs.updateData("products", product_id, { $inc: { quantity: -1 } });
-
-	//if no data found then it will throw an error of status code 400
-	//and it will catch by catch block
-	// let cartData = await crudOPs.getData("carts", 0, {userId})
-
-	//if product already exists in cart
-
-	//add product id into cart & decrease quantity
-	// await crudOPs.updateData("carts", cartData[0]._id, { $push: { products: { productId:product_id } } })
-	// await crudOPs.updateData("products", product_id , { $inc: { quantity:-1 } })
+	//update product Quantity
+	await crudOPs.updateData("products", product_id, { $inc: { quantity: -1 } });
 
 	return res
 		.status(200)
 		.send({ success: true, message: "Product Added To Cart" });
-
-	// } catch (error) {
-
-	//     //if user haven't created any cart then it will create one.
-	//     if (error.statusCode === 400 && error.message.startsWith("No Data Found")) {
-	//         await crudOPs.createData("carts", {userId, products: [{productId:product_id}] })
-	//         await crudOPs.updateData("products", product_id, { $inc: { quantity:-1 } })
-	//         return res.status(201).send({ success:true, message:"Product Added To Cart" })
-	//     }
-
-	//     //an unhandled error occurred!!
-	//     return next(error)
-	// }
 });
 
 //updates quantity
 /**
+ * updates quantity
+ * path: carts/:productId?icrement=1
+ *
  * Access : logged in user
  */
 
 module.exports.updateCart = asyncHandler(async (req, res, next) => {
 	let productId = req.params.productId,
-		userId = req.userData.id;
-	let cartData = await crudOPs.getData("carts", 0, { userId });
-	let quantity = req.query.quantity || 1;
+		userId = req.userData.id,
+		increment = req.query.increment,
+		decrement = req.query.decrement;
+	let quantity;
 
-	//checks if product is in cart
-	let isProductInCart = cartData[0].products.find(
-		(cartItem) => cartItem.productId == productId
-	);
-	if (!isProductInCart) {
-		return res
-			.status(200)
-			.send({ success: false, message: "Product Is Not In Cart!!" });
+	if (!increment && !decrement) {
+		increment = 1;
 	}
 
-	if (!inStock(productId, quantity)) {
-		return res
-			.status(200)
-			.send({ success: false, message: "Not Enough Quantity Available!!" });
-	}
-
-	//update cart
-	await cartModel.updateOne(
-		{
-			_id: cartData[0]._id,
-			"products.productId": productId,
-		},
-		{
-			"products.$.quantity": quantity,
-		}
-	);
-
-	//decrease quantity
-	await crudOPs.updateData("products", productId, {
-		$inc: { quantity: -quantity },
+	let cartData = await crudOPs.getData("carts", 0, {
+		userId,
+		"products.productId": productId,
 	});
-	res.status(200).send({ success: false, message: "Quantity Updated!!" });
+
+	if (increment) {
+		quantity = increment;
+
+		if (!(await productModel.compareStock(productId, quantity))) {
+			res
+				.status(200)
+				.send({ success: false, message: "We Don't Have Enough Stock!!" });
+
+			return false;
+		}
+
+		console.log("qty", quantity);
+		//update cart
+		let d = await cartModel.updateOne(
+			{
+				_id: cartData[0]._id,
+				"products.productId": productId,
+			},
+			{
+				$inc: { "products.$.quantity": quantity },
+			},
+			{ runValidators: true }
+		);
+
+		//decrease quantity
+		await crudOPs.updateData("products", productId, {
+			$inc: { quantity: -quantity },
+		});
+
+		return res
+			.status(200)
+			.send({ success: true, message: "Quantity Updated!!" });
+	} else if (decrement) {
+		quantity = decrement;
+
+		if (!(await cartModel.canDecrement(userId, productId, quantity))) {
+			res.status(200).send({
+				success: 0,
+				message: "you are decrementing more than you have!!",
+			});
+			return false;
+		}
+		//update cart
+		let d = await cartModel.updateOne(
+			{
+				_id: cartData[0]._id,
+				"products.productId": productId,
+			},
+			{
+				$inc: { "products.$.quantity": -quantity },
+			},
+			{ runValidators: true }
+		);
+
+		//Increase quantity
+		await crudOPs.updateData("products", productId, {
+			$inc: { quantity: quantity },
+		});
+
+		return res
+			.status(200)
+			.send({ success: true, message: "Quantity Updated!!" });
+	}
 });
 
 /**
@@ -141,33 +145,22 @@ module.exports.updateCart = asyncHandler(async (req, res, next) => {
 module.exports.deleteItem = asyncHandler(async (req, res, next) => {
 	let productId = req.params.productId,
 		userId = req.userData.id;
-	let cartData = await crudOPs.getData("carts", 0, { userId });
-	let return_flag = 1;
-	let productQuantityInCart = 0;
+	let productDataInCart;
 
-	//if product already exists in cart
-	cartData[0].products.forEach((productsDet) => {
-		if (productsDet.productId == productId) {
-			return_flag = 0;
-			productQuantityInCart = productsDet.quantity;
-		}
+	let cartData = await crudOPs.getData("carts", 0, {
+		userId,
+		"products.productId": productId,
 	});
 
-	if (return_flag) {
-		return res
-			.status(400)
-			.send({ success: false, message: `No Product Of Id ${productId}!` });
-	}
-
-	let product_data = await crudOPs.getData("products", productId);
-
-	// console.log(product_data)
+	productDataInCart = cartData[0].products.find(
+		(productsDet) => productsDet.productId == productId
+	);
 
 	await crudOPs.updateData("carts", cartData[0]._id, {
 		$pull: { products: { productId } },
 	});
 	await crudOPs.updateData("products", productId, {
-		quantity: productQuantityInCart + product_data.quantity,
+		$inc: { quantity: productDataInCart.quantity },
 	});
 	res.send({ success: true, message: "Data Deleted Successfully!!" });
 });

@@ -76,6 +76,25 @@ products.pre("save", async function (next) {
 	next();
 });
 
+products.statics.isInStock = async function isInStock(productId) {
+	let productData = await this.findById(productId);
+	if (parseInt(productData.quantity) <= 0) {
+		return false;
+	}
+	return true;
+};
+
+products.statics.compareStock = async function (productId, quantity) {
+	let productData = await this.findById(productId);
+	if (productData.quantity <= 0) {
+		return false;
+	}
+	if (productData.quantity < quantity) {
+		return false;
+	}
+	return true;
+};
+
 //before updating check if it updating title
 products.pre("updateOne", async function (next) {
 	let dataToBeUpdated = this.getUpdate();
