@@ -46,10 +46,7 @@ module.exports.updateReview = asyncHandler(async (req, res, next) => {
 	let reviewData = { ...req.body };
 	let reviewId = req.params.id;
 
-	let reviews = await RevirewModel.findById(reviewId);
-
-	console.log(reviews);
-	console.log(req.userData.id);
+	let reviews = await crudOPs.getData("reviews", reviewId);
 
 	if (reviews.user != req.userData.id) {
 		next(
