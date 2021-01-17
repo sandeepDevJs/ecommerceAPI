@@ -139,7 +139,10 @@ module.exports.updateData = async (ModelName, id, anyData) => {
 	//if no data found then it will throw an error
 	data = await this.getData(ModelName, id);
 
-	data = await Model.updateOne({ _id: id }, anyData, { runValidators: true });
+	data = await Model.updateOne({ _id: id }, anyData, {
+		new: true,
+		runValidators: true,
+	});
 	return data.nModified;
 };
 

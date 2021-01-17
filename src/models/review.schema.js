@@ -60,8 +60,6 @@ ReviewSchema.statics.getAverageRating = async function (productId) {
 		},
 	]);
 
-	console.log(obj);
-
 	try {
 		await this.model("products").findByIdAndUpdate(productId, {
 			avgRating: obj[0].avgRating,
@@ -72,12 +70,18 @@ ReviewSchema.statics.getAverageRating = async function (productId) {
 };
 
 ReviewSchema.post("save", async function () {
-	console.log("after Save");
 	await this.constructor.getAverageRating(this.productId);
 });
 
-ReviewSchema.pre("remove", async function (next) {
+ReviewSchema.post("remove", async function (doc, next) {
 	await this.constructor.getAverageRating(this.productId);
+	next();
+});
+
+ReviewSchema.post("updateOne", async function (doc, next) {
+	// console.log(this.getQuery());
+	let d = await this.model.findById(this.getQuery()._id);
+	await this.model.getAverageRating(d.productId);
 	next();
 });
 

@@ -59,9 +59,26 @@ module.exports.updateReview = asyncHandler(async (req, res, next) => {
 		return false;
 	}
 
-	let data = await RevirewModel.findByIdAndUpdate(reviewId, reviewData, {
-		new: true,
-		runValidators: true,
-	});
-	res.status(200).send({ success: true, data });
+	let data = await crudOPs.updateData("reviews", reviewId, reviewData); //RevirewModel.findByIdAndUpdate(reviewId); //crudOPs.updateData("reviews", reviewId);
+	res.status(200).send({ success: true, message: "Changes Made!" });
+});
+
+module.exports.deleteReview = asyncHandler(async (req, res, next) => {
+	let reviewId = req.params.id;
+
+	let reviews = await crudOPs.getData("reviews", reviewId);
+
+	if (reviews.user != req.userData.id) {
+		next(
+			new ErrorResponse(
+				"You Are Not Authorized To Make Changes In This Review!",
+				401
+			)
+		);
+
+		return false;
+	}
+
+	let data = await crudOPs.deleteData("reviews", reviewId);
+	res.status(200).send({ success: true, data: {} });
 });

@@ -70,12 +70,8 @@ cart.post("updateOne", async function (doc, next) {
 	let query = this.getQuery();
 	let newQuery = { ...query };
 	newQuery["products.quantity"] = 0;
-	// {
-	// 	_id:query._id,
-	// 	"products.productId" : query.products.productId,
 
-	// }
-	// console.log(newQuery)
+	//delete item if quantity is 0
 	await this.model.update(newQuery, {
 		$pull: {
 			products: { productId: query["products.productId"] },

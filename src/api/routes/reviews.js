@@ -11,6 +11,7 @@ const {
 	getReviewsByProductId,
 	addReview,
 	updateReview,
+	deleteReview,
 } = require("../../services/review");
 const router = Router();
 
@@ -19,7 +20,8 @@ router.route("/").get(auth, getReviews);
 router
 	.route("/:id")
 	.get(auth, getReviewById)
-	.put(auth, celebrate(updateReviewValidator), updateReview);
+	.put(auth, celebrate(updateReviewValidator), updateReview)
+	.delete(auth, deleteReview);
 router
 	.route("/product/:id")
 	.get(auth, getReviewsByProductId)
