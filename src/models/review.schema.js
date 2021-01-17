@@ -34,6 +34,8 @@ var ReviewSchema = new mongoose.Schema({
 	},
 });
 
+ReviewSchema.index({ userId: 1, "products.productId": 1 }, { unique: true });
+
 ReviewSchema.pre("save", async function (next) {
 	try {
 		let data = this.model("products").findById(this.productId);
