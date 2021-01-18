@@ -48,7 +48,7 @@ module.exports.createProduct = asyncHandler(async (req, res) => {
 		},
 		quantity: requestedData.quantity,
 		pricing: {
-			price: 1000,
+			price: requestedData.price,
 		},
 	};
 	data = await crudOPs.createData("products", dataToBeSaved);
