@@ -72,20 +72,36 @@ cart.post("updateOne", async function (doc, next) {
 	newQuery["products.quantity"] = 0;
 
 	//delete item if quantity is 0
-	await this.model.update(newQuery, {
+	await this.model.updateOne(newQuery, {
 		$pull: {
 			products: { productId: query["products.productId"] },
 		},
 	});
+	await this.model.calculateTotal(query._id);
 	next();
 });
 
 cart.statics.canDecrement = async function (userId, productId, quantity) {
 	let data = await this.findOne({ userId });
 	let pQuantity = data.products.find((pd) => pd.productId == productId);
-	console.log("can dec ", pQuantity);
+
 	let rs = pQuantity.quantity - quantity;
 	return rs < 0 ? false : true;
+};
+
+cart.statics.calculateTotal = async function (id) {
+	let data = await this.findOne({ _id: id }).populate({
+		path: "products.productId",
+	});
+
+	let totalArr = data.products.map(
+		(pd) => pd.productId.pricing.price * pd.quantity
+	);
+
+	let total = totalArr.reduce((init, val) => init + val);
+
+	data.total = total;
+	await data.save();
 };
 
 module.exports = mongoose.model("carts", cart);

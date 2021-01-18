@@ -83,8 +83,6 @@ module.exports.updateCart = asyncHandler(async (req, res, next) => {
 
 			return false;
 		}
-
-		console.log("qty", quantity);
 		//update cart
 		let d = await cartModel.updateOne(
 			{
