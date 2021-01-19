@@ -21,6 +21,8 @@ module.exports.addToCart = asyncHandler(async (req, res, next) => {
 	let product_id = req.params.productId,
 		userId = req.userData.id;
 
+	let quantity = req.query.quantity || 1;
+
 	let cart = await cartModel.findOne({ userId });
 
 	//if no cart then create one
@@ -37,12 +39,14 @@ module.exports.addToCart = asyncHandler(async (req, res, next) => {
 
 	//Add product
 	await cartModel.updateOne(
-		{ userId },
-		{ $addToSet: { products: { productId: product_id } } },
+		{ _id: cart._id, userId },
+		{ $addToSet: { products: { productId: product_id, quantity } } },
 		{ runValidators: true }
 	);
 	//update product Quantity
-	await crudOPs.updateData("products", product_id, { $inc: { quantity: -1 } });
+	await crudOPs.updateData("products", product_id, {
+		$inc: { quantity: -quantity },
+	});
 
 	return res
 		.status(200)

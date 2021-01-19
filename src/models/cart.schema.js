@@ -58,12 +58,11 @@ cart.pre("updateOne", async function (next) {
 
 			return false;
 		}
-
 		next();
 		return true;
+	} else {
+		next();
 	}
-
-	next();
 });
 
 cart.post("updateOne", async function (doc, next) {
@@ -72,7 +71,7 @@ cart.post("updateOne", async function (doc, next) {
 	newQuery["products.quantity"] = 0;
 
 	//delete item if quantity is 0
-	await this.model.updateOne(newQuery, {
+	await this.model.update(newQuery, {
 		$pull: {
 			products: { productId: query["products.productId"] },
 		},
