@@ -34,7 +34,7 @@ module.exports.addToCart = asyncHandler(async (req, res, next) => {
 
 	//if not in stock
 	if (!isInStock) {
-		return res.status(200).send({ success: 0, message: "Out Of Stock!" });
+		return res.status(400).send({ success: 0, message: "Out Of Stock!" });
 	}
 
 	//Add product
@@ -82,7 +82,7 @@ module.exports.updateCart = asyncHandler(async (req, res, next) => {
 
 		if (!(await productModel.compareStock(productId, quantity))) {
 			res
-				.status(200)
+				.status(400)
 				.send({ success: false, message: "We Don't Have Enough Stock!!" });
 
 			return false;
