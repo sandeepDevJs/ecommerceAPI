@@ -97,7 +97,8 @@ cart.statics.calculateTotal = async function (id) {
 		(pd) => pd.productId.pricing.price * pd.quantity
 	);
 
-	let total = totalArr.reduce((init, val) => init + val);
+	let total =
+		totalArr.length === 0 ? 0 : totalArr.reduce((init, val) => init + val);
 
 	data.total = total;
 	await data.save();
