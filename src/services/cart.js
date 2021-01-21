@@ -149,11 +149,13 @@ module.exports.deleteItem = asyncHandler(async (req, res, next) => {
 		userId = req.userData.id;
 	let productDataInCart;
 
+	//returns Array
 	let cartData = await crudOPs.getData("carts", 0, {
 		userId,
 		"products.productId": productId,
 	});
 
+	//returns productId & qunatity of product Id  provided from param
 	productDataInCart = cartData[0].products.find(
 		(productsDet) => productsDet.productId == productId
 	);
