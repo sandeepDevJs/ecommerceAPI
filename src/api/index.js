@@ -6,6 +6,7 @@ const subcategories = require("./routes/subcategories");
 const auth = require("./routes/auth");
 const cart = require("./routes/cart");
 const review = require("./routes/reviews");
+const me = require("./routes/me");
 
 module.exports = () => {
 	const routes = Router();
@@ -17,6 +18,7 @@ module.exports = () => {
 	routes.use("/subcategories", subcategories);
 	routes.use("/carts", cart);
 	routes.use("/reviews", review);
+	routes.use("/me", me);
 
 	return routes;
 };
