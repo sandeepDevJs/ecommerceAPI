@@ -11,6 +11,7 @@
 const asyncHandler = require("../api/middlewares/asyncHandler");
 const crudOPs = require("../models");
 const paginator = require("../utils/paginator");
+const { generateToken } = require("../utils/jwt");
 
 module.exports.getUsers = asyncHandler(async (req, res) => {
 	let { pagination, data } = await paginator("users", req.query);
