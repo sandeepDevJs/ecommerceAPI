@@ -30,9 +30,9 @@ module.exports.createUser = asyncHandler(async (req, res) => {
 		uData,
 		token;
 	uData = await crudOPs.createData("users", reqData);
-	token = generateToken(data);
+	token = generateToken(uData._doc);
 	let data = {
-		...uData,
+		...uData._doc,
 		token,
 	};
 	res.status(201).send({ success: 1, message: "User Created!", data });
