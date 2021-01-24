@@ -95,6 +95,8 @@ module.exports.resetPassword = async (req, res, next) => {
 			tokenExpiry: { $gt: Date.now() },
 		});
 		let dataToBeUpdated = {
+			resetPasswordToken : undefined,
+			tokenExpiry : undefined,
 			password: await encrypt(req.body.password),
 		};
 		//update data

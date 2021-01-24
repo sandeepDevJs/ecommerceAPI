@@ -1,0 +1,65 @@
+var mongoose = require("mongoose");
+const ErrorResponse = require("../utils/errorResponse");
+var orderSchema = mongoose.Schema({
+	userId: {
+		type: mongoose.Types.ObjectId,
+		required: true,
+		unique: true,
+	},
+
+	products: [
+		{
+			productId: {
+				type: mongoose.Types.ObjectId,
+				ref: "products",
+				required: true,
+				unique: true,
+			},
+
+			quantity: {
+				type: Number,
+				default: 1,
+				min: [0, "quantity cannot be less than 0"],
+			},
+		},
+	],
+
+	total: {
+		type: Number,
+		required: true,
+	},
+
+	shippingAddress: {
+		address: {
+			type: String,
+			required: true,
+		},
+		city: {
+			type: String,
+			required: true,
+		},
+		PostalCode: {
+			type: Number,
+			required: true,
+			min: [6, "Postal Code Must Be 6 digits in length"],
+		},
+		country: {
+			type: String,
+			required: true,
+		},
+	},
+
+	paymentMethod: {
+		type: String,
+	},
+});
+
+orderSchema.pre("save", async function (next) {
+	if (!orderData.products.length) {
+		next(new ErrorResponse("Empty Cart!", 400));
+		return false;
+	}
+	next();
+});
+
+module.exports = mongoose.model("orders", orderSchema);
