@@ -92,3 +92,16 @@ module.exports.updateReviewValidator = {
 		rating: Joi.number().min(1).max(5),
 	}),
 };
+
+module.exports.addToOrderValidator = {
+	body: Joi.object({
+		shippingAddress: {
+			address: Joi.string().required(),
+			city: Joi.string().required(),
+			PostalCode: Joi.string().length(6),
+			country: Joi.string().required(),
+		},
+
+		paymentMethod: Joi.string().valid("PayPal").required(),
+	}),
+};
