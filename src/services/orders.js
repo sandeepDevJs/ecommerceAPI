@@ -24,23 +24,29 @@ module.exports.addToOrder = asyncHandler(async (req, res) => {
 	res.status(201).send({ message: "Order Placed!!", data });
 });
 
-module.exports.getOrder = asyncHandler(async (req, res) => {
-	let userId = req.userData.id;
+module.exports.getOrderById = asyncHandler(async (req, res) => {
+	let orderId = req.params.id;
 
 	let data = await orderModel
-		.findOne({ userId })
+		.findById(orderId)
 		.populate({ path: "products.productId userId", select: "-__v" });
 
 	res.status(201).send({ message: "Order Placed!!", data });
 });
 
 module.exports.updateOrderToPaid = asyncHandler(async (req, res) => {
-	let userId = req.userData.id;
+	let orderId = req.params.orderId;
 
-	let data = await orderModel.findOne({ userId });
+	let data = await orderModel.findById(orderId);
 	data.isPaid = true;
 	data.paidAt = Date.now();
 
 	const updateOrder = await data.save();
-	res.status(201).send({ message: "Order paid!", data });
+	res.status(200).send({ message: "Order paid!", data });
+});
+
+module.exports.getAllOders = asyncHandler(async (req, res) => {
+	let userId = req.userData.id;
+	let data = await orderModel.find({ userId });
+	res.status(200).send({ data });
 });

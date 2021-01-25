@@ -13,7 +13,6 @@ var orderSchema = mongoose.Schema({
 				type: mongoose.Types.ObjectId,
 				ref: "products",
 				required: true,
-				unique: true,
 			},
 
 			quantity: {
@@ -71,8 +70,17 @@ var orderSchema = mongoose.Schema({
 		type: Boolean,
 	},
 
+	deliveredAt: {
+		type: Date,
+	},
+
 	paidAt: {
 		type: Date,
+	},
+
+	createdAt: {
+		type: Date,
+		default: Date.now(),
 	},
 });
 
