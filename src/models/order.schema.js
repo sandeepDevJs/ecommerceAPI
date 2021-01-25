@@ -4,7 +4,6 @@ var orderSchema = mongoose.Schema({
 	userId: {
 		type: mongoose.Types.ObjectId,
 		required: true,
-		unique: true,
 		ref: "users",
 	},
 
@@ -62,6 +61,18 @@ var orderSchema = mongoose.Schema({
 	taxPrice: {
 		type: Number,
 		required: true,
+	},
+
+	isPaid: {
+		type: Boolean,
+	},
+
+	isDelivered: {
+		type: Boolean,
+	},
+
+	paidAt: {
+		type: Date,
 	},
 });
 

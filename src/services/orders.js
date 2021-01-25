@@ -1,5 +1,6 @@
 const crudOPs = require("../models/index");
 const asyncHandler = require("../api/middlewares/asyncHandler");
+const orderModel = require("../models/order.schema");
 
 module.exports.addToOrder = asyncHandler(async (req, res) => {
 	let userId = req.userData.id;
@@ -26,7 +27,20 @@ module.exports.addToOrder = asyncHandler(async (req, res) => {
 module.exports.getOrder = asyncHandler(async (req, res) => {
 	let userId = req.userData.id;
 
-	let data = await crudOPs.getData("orders", null, { userId });
+	let data = await orderModel
+		.findOne({ userId })
+		.populate({ path: "products.productId userId", select: "-__v" });
 
 	res.status(201).send({ message: "Order Placed!!", data });
+});
+
+module.exports.updateOrderToPaid = asyncHandler(async (req, res) => {
+	let userId = req.userData.id;
+
+	let data = await orderModel.findOne({ userId });
+	data.isPaid = true;
+	data.paidAt = Date.now();
+
+	const updateOrder = await data.save();
+	res.status(201).send({ message: "Order paid!", data });
 });

@@ -1,5 +1,9 @@
 const { Router } = require("express");
-const { addToOrder, getOrder } = require("../../services/orders");
+const {
+	addToOrder,
+	getOrder,
+	updateOrderToPaid,
+} = require("../../services/orders");
 const { addToOrderValidator } = require("../middlewares/validators");
 const { auth } = require("../middlewares/auth");
 const { celebrate } = require("celebrate");
@@ -10,5 +14,7 @@ router
 	.route("/")
 	.get(auth, getOrder)
 	.post(auth, celebrate(addToOrderValidator), addToOrder);
+
+router.route("/pay").put(auth, updateOrderToPaid);
 
 module.exports = router;
