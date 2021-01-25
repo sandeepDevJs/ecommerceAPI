@@ -5,6 +5,7 @@ var orderSchema = mongoose.Schema({
 		type: mongoose.Types.ObjectId,
 		required: true,
 		unique: true,
+		ref: "users",
 	},
 
 	products: [
@@ -38,7 +39,7 @@ var orderSchema = mongoose.Schema({
 			type: String,
 			required: true,
 		},
-		PostalCode: {
+		postalCode: {
 			type: Number,
 			required: true,
 			min: [6, "Postal Code Must Be 6 digits in length"],
@@ -51,11 +52,21 @@ var orderSchema = mongoose.Schema({
 
 	paymentMethod: {
 		type: String,
+		required: true,
+	},
+
+	shippingPrice: {
+		type: Number,
+		required: true,
+	},
+	taxPrice: {
+		type: Number,
+		required: true,
 	},
 });
 
 orderSchema.pre("save", async function (next) {
-	if (!orderData.products.length) {
+	if (!this.products.length) {
 		next(new ErrorResponse("Empty Cart!", 400));
 		return false;
 	}

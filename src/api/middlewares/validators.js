@@ -98,10 +98,14 @@ module.exports.addToOrderValidator = {
 		shippingAddress: {
 			address: Joi.string().required(),
 			city: Joi.string().required(),
-			PostalCode: Joi.string().length(6),
+			postalCode: Joi.string().length(6).required(),
 			country: Joi.string().required(),
 		},
 
 		paymentMethod: Joi.string().valid("PayPal").required(),
+
+		totalPrice: Joi.number().required(),
+		shippingPrice: Joi.number().required(),
+		taxPrice: Joi.number().required(),
 	}),
 };

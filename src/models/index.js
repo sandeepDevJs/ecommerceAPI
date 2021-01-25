@@ -8,6 +8,7 @@ const SubcategoriesModel = require("./subcategory.schema");
 const usersModel = require("./users.schema");
 const carts = require("./cart.schema");
 const RevirewModel = require("./review.schema");
+const OrderModel = require("./order.schema");
 const ErrorResponse = require("../utils/errorResponse");
 const mongoose = require("mongoose");
 
@@ -34,6 +35,9 @@ function getModel(modelName) {
 
 		case "reviews":
 			return RevirewModel;
+
+		case "orders":
+			return OrderModel;
 
 		default:
 			return false;
