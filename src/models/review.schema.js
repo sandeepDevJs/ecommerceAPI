@@ -38,7 +38,9 @@ ReviewSchema.index({ userId: 1, "products.productId": 1 }, { unique: true });
 
 ReviewSchema.pre("save", async function (next) {
 	try {
-		let data = this.model("products").findById(this.productId);
+		let data = await this.model("products")
+			.findById(this.productId)
+			.populate({ path: "reviews" });
 		if (!data) {
 			next(new ErrorResponse("No Data Found Associated To Product Id!", 404));
 			return false;
@@ -63,11 +65,17 @@ ReviewSchema.statics.getAverageRating = async function (productId) {
 	]);
 
 	try {
-		await this.model("products").findByIdAndUpdate(productId, {
-			avgRating: obj[0].avgRating,
-		});
+		if (obj.length !== 0) {
+			await this.model("products").findByIdAndUpdate(productId, {
+				avgRating: obj[0].avgRating,
+			});
+		} else {
+			await this.model("products").findByIdAndUpdate(productId, {
+				avgRating: 0,
+			});
+		}
 	} catch (error) {
-		next(error);
+		throw new ErrorResponse(error);
 	}
 };
 
@@ -76,12 +84,16 @@ ReviewSchema.post("save", async function () {
 });
 
 ReviewSchema.post("remove", async function (doc, next) {
+	await this.constructor.getAverageRating(doc.productId);
+	next();
+});
+
+ReviewSchema.pre("remove", async function (next) {
 	await this.constructor.getAverageRating(this.productId);
 	next();
 });
 
 ReviewSchema.post("updateOne", async function (doc, next) {
-	// console.log(this.getQuery());
 	let d = await this.model.findById(this.getQuery()._id);
 	await this.model.getAverageRating(d.productId);
 	next();

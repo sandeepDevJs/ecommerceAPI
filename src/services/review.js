@@ -1,5 +1,6 @@
 const asyncHandler = require("../api/middlewares/asyncHandler");
 const crudOPs = require("../models");
+const productsSchema = require("../models/products.schema");
 const RevirewModel = require("../models/review.schema");
 const ErrorResponse = require("../utils/errorResponse");
 const paginator = require("../utils/paginator");
@@ -39,6 +40,11 @@ module.exports.addReview = asyncHandler(async (req, res) => {
 	reviewData.user = req.userData.id;
 
 	let data = await crudOPs.createData("reviews", reviewData);
+
+	await crudOPs.updateData("products", data.productId, {
+		$push: { reviews: data._id },
+	});
+
 	res.status(200).send({ success: true, data });
 });
 
@@ -80,5 +86,8 @@ module.exports.deleteReview = asyncHandler(async (req, res, next) => {
 	}
 
 	let data = await crudOPs.deleteData("reviews", reviewId);
+	let a = await productsSchema.findByIdAndUpdate(reviews.productId, {
+		$pull: { reviews: reviewId },
+	});
 	res.status(200).send({ success: true, data: {} });
 });
