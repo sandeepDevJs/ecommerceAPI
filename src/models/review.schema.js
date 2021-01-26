@@ -99,4 +99,10 @@ ReviewSchema.post("updateOne", async function (doc, next) {
 	next();
 });
 
+ReviewSchema.pre(/^find/, function (next) {
+	console.log("I rann review");
+	this.populate({ path: "user" });
+	next();
+});
+
 module.exports = mongoose.model("reviews", ReviewSchema);

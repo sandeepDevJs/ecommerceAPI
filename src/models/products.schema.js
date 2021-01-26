@@ -118,4 +118,10 @@ products.pre("updateOne", async function (next) {
 	next();
 });
 
+products.pre(/^find/, function (next) {
+	console.log("I rann");
+	this.populate({ path: "reviews" });
+	next();
+});
+
 module.exports = mongoose.model("products", products);
