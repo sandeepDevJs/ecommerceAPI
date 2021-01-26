@@ -119,7 +119,6 @@ products.pre("updateOne", async function (next) {
 });
 
 products.pre(/^find/, function (next) {
-	console.log("I rann");
 	this.populate({ path: "reviews" });
 	next();
 });

@@ -79,7 +79,6 @@ module.exports.passwordValidator = {
 
 module.exports.reviewValidator = {
 	body: Joi.object({
-		title: Joi.string().min(4).max(200).trim().required(),
 		text: Joi.string().min(10).max(500).trim().required(),
 		rating: Joi.number().min(1).max(5).required(),
 	}),
@@ -87,7 +86,6 @@ module.exports.reviewValidator = {
 
 module.exports.updateReviewValidator = {
 	body: Joi.object({
-		title: Joi.string().min(4).max(200).trim(),
 		text: Joi.string().min(5).max(500).trim(),
 		rating: Joi.number().min(1).max(5),
 	}),
