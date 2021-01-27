@@ -1,12 +1,6 @@
 let ErrorResponse = require("../utils/errorResponse");
 var mongoose = require("mongoose");
 var ReviewSchema = new mongoose.Schema({
-	title: {
-		type: String,
-		trim: true,
-		maxlength: 100,
-		required: [true, "Title Is Required"],
-	},
 	text: {
 		type: String,
 		required: [true, "Add Some Text."],
@@ -34,7 +28,7 @@ var ReviewSchema = new mongoose.Schema({
 	},
 });
 
-ReviewSchema.index({ userId: 1, "products.productId": 1 }, { unique: true });
+ReviewSchema.index({ user: 1, productId: 1 }, { unique: true });
 
 ReviewSchema.pre("save", async function (next) {
 	try {
@@ -67,7 +61,7 @@ ReviewSchema.statics.getAverageRating = async function (productId) {
 	try {
 		if (obj.length !== 0) {
 			await this.model("products").findByIdAndUpdate(productId, {
-				avgRating: obj[0].avgRating,
+				avgRating: obj[0].avgRating.toFixed(1),
 			});
 		} else {
 			await this.model("products").findByIdAndUpdate(productId, {
@@ -100,7 +94,6 @@ ReviewSchema.post("updateOne", async function (doc, next) {
 });
 
 ReviewSchema.pre(/^find/, function (next) {
-	console.log("I rann review");
 	this.populate({ path: "user" });
 	next();
 });
