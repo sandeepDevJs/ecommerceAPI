@@ -11,6 +11,7 @@ const {
 	deleteProduct,
 	createProduct,
 	getProductById,
+	getTopProducts,
 } = require("../../services/products");
 
 const upload = require("../../utils/multer");
@@ -26,6 +27,8 @@ router
 		celebrate(createProductValidator),
 		createProduct
 	);
+
+router.route("/topProducts").get(getTopProducts);
 
 router
 	.route("/:id")

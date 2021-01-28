@@ -27,6 +27,24 @@ module.exports.getProducts = asyncHandler(async (req, res) => {
 });
 
 /**
+ * @desc {
+ *
+ * 		Get The Latest Top 3 Products
+ * 		Ranked By Rating
+ *
+ * }
+ *
+ */
+module.exports.getTopProducts = asyncHandler(async (req, res) => {
+	let options = {
+		limit: 3,
+		sort: "-avgRating",
+	};
+	let { data } = await paginator("products", options);
+	res.status(200).send({ success: true, data });
+});
+
+/**
  * POST: products/
  *
  * access: Admin
