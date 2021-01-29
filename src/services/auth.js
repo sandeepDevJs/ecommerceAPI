@@ -58,12 +58,11 @@ module.exports.forgotPassword = asyncHandler(async (req, res) => {
 	});
 
 	//create url
-	const url = config.homeURL + "resetPassword/" + resetToken;
+	const url = "http://localhost:3000/" + "resetPassword/" + resetToken;
 
 	//set mmessage
-	const message =
-		"you are receiving this message because you have requested the reset of a password. Please Make A PUT Request To " +
-		url;
+	const message = `<p>you are receiving this message because you have requested the reset of a password. Please Visit For Password Change <a href="${url}">
+		${url}"</a></p>`;
 
 	try {
 		//send email
@@ -95,8 +94,8 @@ module.exports.resetPassword = async (req, res, next) => {
 			tokenExpiry: { $gt: Date.now() },
 		});
 		let dataToBeUpdated = {
-			resetPasswordToken : undefined,
-			tokenExpiry : undefined,
+			resetPasswordToken: undefined,
+			tokenExpiry: undefined,
 			password: await encrypt(req.body.password),
 		};
 		//update data
