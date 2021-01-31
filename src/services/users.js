@@ -10,12 +10,12 @@
 
 const asyncHandler = require("../api/middlewares/asyncHandler");
 const crudOPs = require("../models");
-const paginator = require("../utils/paginator");
+const userModel = require("../models/users.schema");
 const { generateToken } = require("../utils/jwt");
 
 module.exports.getUsers = asyncHandler(async (req, res) => {
-	let { pagination, data } = await paginator("users", req.query);
-	res.status(200).send({ success: true, pagination, data });
+	let data = await userModel.find();
+	res.status(200).send({ success: true, data });
 });
 
 module.exports.getUserById = asyncHandler(async (req, res) => {
