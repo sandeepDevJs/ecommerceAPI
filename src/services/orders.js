@@ -1,6 +1,7 @@
 const crudOPs = require("../models/index");
 const asyncHandler = require("../api/middlewares/asyncHandler");
 const orderModel = require("../models/order.schema");
+const ErrorResponse = require("../utils/errorResponse");
 
 module.exports.addToOrder = asyncHandler(async (req, res) => {
 	let userId = req.userData.id;
@@ -49,4 +50,14 @@ module.exports.getAllOders = asyncHandler(async (req, res) => {
 	let userId = req.userData.id;
 	let data = await orderModel.find({ userId });
 	res.status(200).send({ data });
+});
+
+module.exports.getAllOdersByUserId = asyncHandler(async (req, res, next) => {
+	let userId = req.params.userId;
+	let data = await orderModel.find({ userId }).populate({ path: "userId" });
+	if (!data.length) {
+		next(new ErrorResponse("No Data!", 404));
+	} else {
+		res.status(200).send({ data });
+	}
 });
