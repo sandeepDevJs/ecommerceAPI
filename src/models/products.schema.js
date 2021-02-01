@@ -118,6 +118,12 @@ products.pre("updateOne", async function (next) {
 	next();
 });
 
+products.pre("remove", async function (next) {
+	let pid = this._id;
+	await this.model("reviews").deleteMany({ productId: pid });
+	next();
+});
+
 products.pre(/^find/, function (next) {
 	this.populate({ path: "reviews" });
 	next();
