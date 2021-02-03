@@ -91,16 +91,15 @@ module.exports.updateProduct = asyncHandler(async (req, res) => {
 		requestedData = { ...req.body };
 
 	if (requestedData.category) {
-		let category = await crudOPs.getData("categories", requestedData.category);
-		requestedData.category = category.category;
+		await crudOPs.getData("categories", requestedData.category);
+		// requestedData.category = category.category;
 	}
 
+	console.log(requestedData);
+
 	if (requestedData.subcategory) {
-		let subcategory = await crudOPs.getData(
-			"subcategories",
-			requestedData.subcategory
-		);
-		requestedData.subcategory = subcategory.subcategory;
+		await crudOPs.getData("subcategories", requestedData.subcategory);
+		// requestedData.subcategory = subcategory.subcategory;
 	}
 
 	data = await crudOPs.updateData("products", product_id, requestedData);

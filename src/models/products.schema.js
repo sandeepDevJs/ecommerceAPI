@@ -17,11 +17,13 @@ var products = new mongoose.Schema({
 		required: [true, "description is required"],
 	},
 	category: {
-		type: String,
+		type: mongoose.Types.ObjectId,
+		ref: "categories",
 		required: [true, "category is required"],
 	},
 	subcategory: {
-		type: String,
+		type: mongoose.Types.ObjectId,
+		ref: "subcategories",
 	},
 	manufacture_details: {
 		model_number: {
@@ -80,8 +82,8 @@ products.pre("save", async function (next) {
 			return false;
 		}
 	}
-	this.category = category.category;
-	this.subcategory = subcategory.subcategory;
+	// this.category = category.category;
+	// this.subcategory = subcategory.subcategory;
 	next();
 });
 
@@ -125,7 +127,7 @@ products.pre("remove", async function (next) {
 });
 
 products.pre(/^find/, function (next) {
-	this.populate({ path: "reviews" });
+	this.populate({ path: "reviews category subcategory" });
 	next();
 });
 
