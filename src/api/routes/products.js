@@ -12,6 +12,7 @@ const {
 	createProduct,
 	getProductById,
 	getTopProducts,
+	productImageUpdate,
 } = require("../../services/products");
 
 const upload = require("../../utils/multer");
@@ -35,5 +36,9 @@ router
 	.get(auth, authAdmin, getProductById)
 	.put(auth, authAdmin, updateProduct)
 	.delete(auth, authAdmin, deleteProduct);
+
+router
+	.route("/updateImage/:id")
+	.put(auth, authAdmin, upload.single("product_image"), productImageUpdate);
 
 module.exports = router;

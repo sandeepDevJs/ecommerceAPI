@@ -118,3 +118,11 @@ module.exports.getProductById = asyncHandler(async (req, res) => {
 	data = await crudOPs.getData("products", product_id);
 	res.status(200).send({ success: true, data });
 });
+
+module.exports.productImageUpdate = asyncHandler(async (req, res) => {
+	let product_image = config.homeURL + "images/" + req.file.filename;
+	let product_id = req.params.id;
+
+	data = await crudOPs.updateData("products", product_id, { product_image });
+	res.status(200).send({ success: 1, message: "Product Updated", data: data });
+});
