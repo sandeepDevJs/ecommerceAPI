@@ -8,6 +8,7 @@ var subcategories = new mongoose.Schema({
 	},
 	category_id: {
 		type: mongoose.Types.ObjectId,
+		ref: "categories",
 		required: true,
 	},
 });

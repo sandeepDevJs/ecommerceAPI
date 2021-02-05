@@ -14,7 +14,7 @@ const subcategoryModel = require("../models/subcategory.schema");
 const paginator = require("../utils/paginator");
 
 module.exports.getSubcategories = asyncHandler(async (req, res, next) => {
-	let data = await subcategoryModel.find();
+	let data = await subcategoryModel.find().populate({ path: "category_id" });
 	res.status(200).send({ success: true, data });
 });
 
