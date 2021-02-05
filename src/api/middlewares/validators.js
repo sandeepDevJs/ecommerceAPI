@@ -39,8 +39,8 @@ module.exports.createProductValidator = {
 		subcategory: mongoose.Types.ObjectId,
 		model_number: Joi.string().alphanum().required(),
 		release_date: Joi.date().required(),
-		quantity: Joi.number().min(1).max(100).required(),
-		price: Joi.number().min(200).max(400000).required(),
+		quantity: Joi.number().min(1).max(50).required(),
+		price: Joi.number().min(100).max(200000).required(),
 	}),
 };
 
