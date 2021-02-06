@@ -96,7 +96,7 @@ module.exports.addToOrderValidator = {
 		shippingAddress: {
 			address: Joi.string().required(),
 			city: Joi.string().required(),
-			postalCode: Joi.string().length(6).required(),
+			postalCode: Joi.number().required(),
 			country: Joi.string().required(),
 		},
 

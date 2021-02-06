@@ -61,3 +61,8 @@ module.exports.getAllOdersByUserId = asyncHandler(async (req, res, next) => {
 		res.status(200).send({ data });
 	}
 });
+
+module.exports.getAllOdersByAdmin = asyncHandler(async (req, res) => {
+	let data = await orderModel.find();
+	res.status(200).send({ data });
+});

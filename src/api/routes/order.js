@@ -5,6 +5,7 @@ const {
 	updateOrderToPaid,
 	getAllOders,
 	getAllOdersByUserId,
+	getAllOdersByAdmin,
 } = require("../../services/orders");
 const { addToOrderValidator } = require("../middlewares/validators");
 const { auth, authAdmin } = require("../middlewares/auth");
@@ -14,6 +15,7 @@ const router = Router();
 
 router.route("/").post(auth, celebrate(addToOrderValidator), addToOrder);
 
+router.route("/").get(auth, authAdmin, getAllOdersByAdmin);
 router.route("/:userId/orders").get(auth, authAdmin, getAllOdersByUserId);
 
 router.route("/myorders").get(auth, getAllOders);
