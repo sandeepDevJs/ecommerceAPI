@@ -66,3 +66,14 @@ module.exports.getAllOdersByAdmin = asyncHandler(async (req, res) => {
 	let data = await orderModel.find();
 	res.status(200).send({ data });
 });
+
+module.exports.updateOrderToDelivered = asyncHandler(async (req, res) => {
+	let orderId = req.params.orderId;
+
+	let data = await orderModel.findById(orderId);
+	data.isDelivered = true;
+	data.deliveredAt = Date.now();
+
+	const updateOrder = await data.save();
+	res.status(200).send({ message: "Order paid!", data });
+});
