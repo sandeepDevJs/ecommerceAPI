@@ -11,10 +11,14 @@ const xss = require("xss-clean");
 const rateLimit = require("express-rate-limit");
 const hpp = require("hpp");
 const mongoSanitize = require("express-mongo-sanitize");
+const config = require("../../config");
 
 module.exports = (express, app) => {
 	app.use(express.json());
-	app.use(morgan("dev"));
+
+	if (config.env === "development") {
+		app.use(morgan("dev"));
+	}
 
 	//header protection
 	app.use(helmet());

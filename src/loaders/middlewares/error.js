@@ -6,6 +6,7 @@
 
 const ErrorResponse = require("../../utils/errorResponse");
 const { isCelebrateError } = require("celebrate");
+const config = require("../../config");
 module.exports = (err, req, res, next) => {
 	let error = { ...err };
 	error.message = err.message;
@@ -31,7 +32,9 @@ module.exports = (err, req, res, next) => {
 		error = new ErrorResponse(err.details.get("body").details[0].message, 400);
 	}
 
-	console.log(err);
+	if (config.env === "development") {
+		console.log(err);
+	}
 
 	// if(err.error.reason.kind === "ObjectId"){
 	//     error = new ErrorResponse(`Invalid ${err.error.reason.path} !! `, 400)
