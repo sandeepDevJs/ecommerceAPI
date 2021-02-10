@@ -29,7 +29,7 @@ module.exports = (express, app) => {
 	app.use(xss());
 
 	//Rate Limiting
-	let limiter = rateLimit({ windowMs: 10 * 60 * 1000, max: 100 });
+	let limiter = rateLimit({ windowMs: 10 * 60 * 1000, max: 30000 });
 	app.use(limiter);
 
 	//prevent http param pollution
