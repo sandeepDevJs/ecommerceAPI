@@ -1,6 +1,6 @@
 # Ecommerce API
 
-> Backend API For E Commerce Application, [which is available](https://github.com/sandeepDevJs/ecommerceProject)
+> Backend API For E Commerce Application, [which is available here!](https://github.com/sandeepDevJs/ecommerceProject)
 
 > [Documentation For API](https://documenter.getpostman.com/view/12289426/TWDUryKg)
 
