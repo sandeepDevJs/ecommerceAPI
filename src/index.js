@@ -19,7 +19,6 @@ process.on("unhandledRejection", (error) => {
 	} else {
 		console.log("ERROR: ", error);
 	}
-	process.exit(1);
 });
 
 process.on("uncaughtException", (error) => {
@@ -28,6 +27,4 @@ process.on("uncaughtException", (error) => {
 	} else {
 		console.log("Oh my god, something terrible happened: ");
 	}
-
-	process.exit(1);
 });
