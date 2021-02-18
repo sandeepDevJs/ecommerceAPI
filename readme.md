@@ -2,7 +2,7 @@
 
 > Backend API For E Commerce Application, [which is available here!](https://github.com/sandeepDevJs/ecommerceProject)
 
-> [Documentation For API](https://documenter.getpostman.com/view/12289426/TWDUryKg)
+> [See Documentation For API Here](https://documenter.getpostman.com/view/12289426/TWDUryKg)
 
 ## Usage
 
