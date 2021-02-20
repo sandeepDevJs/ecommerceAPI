@@ -6,13 +6,13 @@
 
 ## API security
 
-> Rate Limiting
-> HPP Protected
-> XSS protected
-> Header Protection ( Helmet )
-> CORS
-> NoSql Injection Protected
-> Enviroment Variables
+- Rate Limiting
+- HPP Protected
+- XSS protected
+- Header Protection ( Helmet )
+- CORS
+- NoSql Injection Protected
+- Enviroment Variables
 
 ## Usage
 
