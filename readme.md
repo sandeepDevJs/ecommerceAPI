@@ -1,12 +1,22 @@
 # Ecommerce API
 
-> Backend API For E Commerce Application, [which is available](https://github.com/sandeepDevJs/ecommerceProject)
+> Backend API For E Commerce Application, [which is available here!](https://github.com/sandeepDevJs/ecommerceProject)
 
-> [Documentation For API](https://documenter.getpostman.com/view/12289426/TWDUryKg)
+> [See Documentation For API Here](https://documenter.getpostman.com/view/12289426/TWDUryKg)
+
+## API security
+
+- Rate Limiting
+- HPP Protected
+- XSS protected
+- Header Protection ( Helmet )
+- CORS
+- NoSql Injection Protected
+- Enviroment Variables
 
 ## Usage
 
-Rename ".env.env" to ".env" and update the values/settings to your own
+Rename ".env.config" to ".env" and update the values/settings to your own
 
 ## Install Dependencies
 
