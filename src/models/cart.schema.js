@@ -31,8 +31,6 @@ var cart = mongoose.Schema({
 	],
 });
 
-cart.index({ userId: 1, "products.productId": 1 }, { unique: true });
-
 cart.pre("updateOne", async function (next) {
 	//selector Data
 	let userData = this.getQuery();
