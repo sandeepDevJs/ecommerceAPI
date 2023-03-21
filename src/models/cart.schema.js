@@ -19,7 +19,6 @@ var cart = mongoose.Schema({
 				type: mongoose.Types.ObjectId,
 				ref: "products",
 				required: true,
-				unique: true,
 			},
 
 			quantity: {
